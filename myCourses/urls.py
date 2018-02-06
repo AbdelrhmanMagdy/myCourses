@@ -21,5 +21,14 @@ from mainApp import views as mainAppViews
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    path('signup', mainAppViews.SignUpView.as_view()),
+    path('login', mainAppViews.LogInView.as_view()),
     path('userProfile', mainAppViews.UserProfileView.as_view()),
+    path('emailCheck', mainAppViews.EmailCheckView.as_view()),
+    path('api/centres', mainAppViews.CentreView.as_view()),
+     url(r'^api/courses/(?P<pk>[0-9]+)/$',mainAppViews.CourseDetailsView.as_view()),
+    path('api/cources', mainAppViews.CourseView.as_view()),
+    url(r'^api/centreImages/(?P<pk>[0-9]+)/$', mainAppViews.CentreImagesView.as_view()),
+    url(r'^api/centreCourses/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseView.as_view()),
+
 ]
