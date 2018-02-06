@@ -1,0 +1,22 @@
+.vscode/
+*.pyc
+__pycache__/
+setup.txt
+env/
+PM_System documents/
+bin
+include
+lib
+local
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
+media/
+ASURTBackend/requirements.txt.*
+ASURTBackend/.idea
+db.sqlite3
+files/*
+documents/*
+ASURT-Frontend/
+.idea/*
+.idea
