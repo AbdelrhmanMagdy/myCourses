@@ -20,12 +20,12 @@ class UserProfileModel(models.Model):
         return str(self.user)
 
 class CertificatesModel(models.Model):
-    certificate = models.FileField(upload_to='Certificates', blank=True,null=True)
+    certificate = models.FileField(upload_to='media/certificates', blank=True,null=True)
     user = models.ForeignKey(UserProfileModel,on_delete=models.CASCADE, null=True)
 
 class CoursesModel(models.Model):
     courseName = models.CharField(max_length=50)
-    courseImage = models.ImageField(upload_to='Images', blank=True,null=True)
+    courseImage = models.ImageField(upload_to='media/images', blank=True,null=True)
     courseSlogun = models.CharField(max_length=250)
 
     def __str__(self):
@@ -50,13 +50,13 @@ class SubCoursesModel(models.Model):
     rate =  models.IntegerField()
     fees = models.CharField(max_length=50)
     course = models.ForeignKey(CoursesModel, on_delete=models.CASCADE, null=True,blank=True, related_name='subCourses')
-    subCourseImage = models.ImageField(upload_to='Images', blank=True,null=True)
+    subCourseImage = models.ImageField(upload_to='media/images', blank=True,null=True)
     centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE, null=True,blank=True, related_name='centre')
 
     def __str__(self):
         return str(self.instructorName)
 class CentreImagesModel(models.Model):
-    images = models.ImageField(upload_to='Images', blank=True,null=True)
+    images = models.ImageField(upload_to='media/images', blank=True,null=True)
     centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE,null=True,blank=True, related_name='images')
 
 
