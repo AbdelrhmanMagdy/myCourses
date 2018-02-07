@@ -18,6 +18,7 @@ from django.urls import include, path, re_path
 from django.contrib import admin
 
 from mainApp import views as mainAppViews
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -32,3 +33,5 @@ urlpatterns = [
     url(r'^api/centreCourses/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseView.as_view()),
 
 ]
+urlpatterns += staticfiles_urlpatterns()
+
