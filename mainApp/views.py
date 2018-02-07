@@ -15,6 +15,7 @@ from .models import CertificatesModel, UserProfileModel, CoursesModel, DatesMode
 from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, CentreImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, CentreImagesSerializer
 # Create your views here.
 
+
 class EmailCheckView(APIView):
     def post(self,request):
         try:
@@ -37,6 +38,10 @@ class SignUpView(APIView):
         if userSerializer.is_valid():
             userSerializer.save()
             user = User.objects.get(username=userSerializer.data['username'])
+            user.email = userSerializer.data['username']
+            user.save()
+            # print(email)
+            
             return Response({"created":"true","id":user.id})
         return Response(userSerializer.errors)
 
