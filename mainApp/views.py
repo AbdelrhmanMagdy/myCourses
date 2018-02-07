@@ -27,7 +27,7 @@ class LogInView(APIView):
     def post(self,request):
         user = authenticate(username=request.data['username'], password=request.data['password'])
         if user is not None:
-            return Response({"login":"true"})
+            return Response({"login":"true","is_staff":user.is_staff})
         return Response({"login":"false","errors":"Username or Password isn't correct"})
 
 
