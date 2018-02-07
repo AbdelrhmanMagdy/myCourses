@@ -9,10 +9,10 @@ from django.contrib.auth import authenticate
 # Models
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import CertificatesModel, UserProfileModel, CoursesModel, DatesModel, CentreImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel
+from .models import CertificatesModel, UserProfileModel, CoursesModel, DatesModel, CentreImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, CentreImagesSerializer, CoursesSerializer, SubCourseSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, CentreImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, CentreImagesSerializer
 # Create your views here.
 
 class EmailCheckView(APIView):
@@ -135,3 +135,28 @@ class CourseDetailsView(APIView):
             
         return Response(data)
  
+class CategoriesView(APIView):
+    def get(self,request,format=None):
+        categories = studyCategoriesModel.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+    
+    def post(self,request,format=None):
+        serializer = CategorySerializer(data=request.data,many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+class CentreImagesView(APIView):
+    def post(self,request,format=None):
+        serializer = CentreImagesSerializer(data=request.data,many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def get(self,request,format=None):
+        images = CentreImagesModel.objects.all()   
+        serializer = CentreImagesSerializer(images,many=True)
+        return Response(serializer.data)
