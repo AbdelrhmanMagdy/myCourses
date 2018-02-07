@@ -75,7 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password', 'username',)
+        fields = ('password', 'username','is_staff')
 
 class CentreSerializer(serializers.ModelSerializer):
     class Meta:
