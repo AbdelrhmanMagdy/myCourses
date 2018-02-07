@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import CertificatesModel,UserProfileModel,CoursesModel,DatesModel,CentreImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel
+from .models import CertificatesModel,UserProfileModel,CoursesModel,DatesModel,CentreImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -51,7 +51,14 @@ class Base64ImageField(serializers.ImageField):
         extension = "jpg" if extension == "jpeg" else extension
 
         return extension
-
+class CentreImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  CentreImagesModel
+        exclude = ('')
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  studyCategoriesModel
+        exclude = ('')
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

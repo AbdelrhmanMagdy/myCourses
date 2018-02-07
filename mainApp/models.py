@@ -4,17 +4,18 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
-educationOptions = [('university','university'),('highSchool','highSchool'),('school','school')]
 
 # Create your models here.
+class studyCategoriesModel(models.Model):
+    category = models.CharField(max_length=90)
+
+    def __str__(self):
+        return str(self.category)
 
 class UserProfileModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, db_index=True)
     mobile = models.CharField(max_length=11)
-    educationLevel = models.CharField(max_length=15, choices=educationOptions)
-    university = models.CharField(max_length=15,blank=True) 
-    faculty = models.CharField(max_length=15, blank=True) # faculty if exist and it's major / minor
-    major = models.CharField(max_length=15,blank=True) # 3elmy / adby 
+    fieldOfStudy = models.ManyToManyField(studyCategoriesModel,blank=True,related_name='userCategories') 
 
     def __str__(self):
         return str(self.user)
@@ -27,6 +28,7 @@ class CoursesModel(models.Model):
     courseName = models.CharField(max_length=50)
     courseImage = models.ImageField(upload_to='media/images', blank=True,null=True)
     courseSlogun = models.CharField(max_length=250)
+    categories = models.ManyToManyField(studyCategoriesModel,blank=True,related_name='courseCategories') 
 
     def __str__(self):
         return str(self.courseName)
@@ -58,7 +60,8 @@ class SubCoursesModel(models.Model):
 class CentreImagesModel(models.Model):
     images = models.ImageField(upload_to='media/images', blank=True,null=True)
     centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE,null=True,blank=True, related_name='images')
-
+    def __str__(self):
+        return str(self.centre.centreName)
 
 class PromoCodeModel(models.Model):
     promoCode = models.CharField(max_length=50)
