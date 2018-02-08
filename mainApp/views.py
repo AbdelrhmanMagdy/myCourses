@@ -28,8 +28,8 @@ class LogInView(APIView):
     def post(self,request):
         user = authenticate(username=request.data['username'], password=request.data['password'])
         if user is not None:
-            return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser})
-        return Response({"login":"false","errors":"Username or Password isn't correct"})
+    	    return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser})
+        return Response({"login":"false","errors":"Username or Password isn't correct","request":request.data})
 
 
 class SignUpView(APIView):
