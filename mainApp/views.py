@@ -9,26 +9,26 @@ from django.contrib.auth import authenticate
 # Models
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import CertificatesModel, UserProfileModel, CoursesModel, DatesModel, CentreImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
+from .models import CertificatesModel, UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, CentreImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, CentreImagesSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer
 # Create your views here.
 
 
 class EmailCheckView(APIView):
     def post(self,request):
         try:
-            email = User.objects.get(email=request.data['email'])
+            email = User.objects.get(username=request.data['username'])
         except User.DoesNotExist:
-            return Response({"exsist":"false"})    
-        return Response({"exsist":"true"})    
+            return Response({"exist":"false"})    
+        return Response({"exist":"true"})    
 
 class LogInView(APIView):
     def post(self,request):
         user = authenticate(username=request.data['username'], password=request.data['password'])
         if user is not None:
-            return Response({"login":"true","is_staff":user.is_staff})
+            return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"last_name":user.last_name,"is_superuser":user.is_superuser})
         return Response({"login":"false","errors":"Username or Password isn't correct"})
 
 
@@ -73,30 +73,30 @@ class CentreView(APIView):
 
 
 
-class CentreImagesView(APIView):
+class SubCourseImagesView(APIView):
 
     def get(self, request, pk, format=None):
-        centres =  CentreImagesModel.objects.filter(centre = pk)
-        serializer = CentreImagesSerializer(centres,many=True)
+        images =  SubCourseImagesModel.objects.filter(subCourse__pk = pk)
+        serializer = SubCourseImagesSerializer(images,many=True)
         return Response(serializer.data)
     def post(self, request, pk, format=None):
-        serializer = CentreImagesSerializer(data=request.data,many=True)
+        serializer = SubCourseImagesSerializer(data=request.data,many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)    
 
-class CoursesView(APIView):
-    def get(self, request, pk, format=None):
-        centres =  CentreImagesModel.objects.filter(centre = pk)
-        serializer = CentreImagesSerializer(centres,many=True)
-        return Response(serializer.data)
-    def post(self, request, pk, format=None):
-        serializer = CentreImagesSerializer(data=request.data,many=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)    
+# class CoursesView(APIView):
+#     def get(self, request, pk, format=None):
+#         centres =  SubCourseImagesModel.objects.filter(centre = pk)
+#         serializer = CentreImagesSerializer(centres,many=True)
+#         return Response(serializer.data)
+#     def post(self, request, pk, format=None):
+#         serializer = CentreImagesSerializer(data=request.data,many=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors)    
 
 
 
@@ -104,16 +104,16 @@ class SubCourseView(APIView):
     def get(self, request,pk, format=None):
         centreInfo = CentreModel.objects.get(pk=pk)
         centreInfoSerializer = CentreSerializer(centreInfo)
-        centreImages = CentreImagesModel.objects.filter(centre=pk)
-        centreImageSerializer = CentreImagesSerializer(centreImages,many=True)
         subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
         subCoursesSerializer = SubCourseSerializer(subcourses, many=True)
-        data= {"info":[],"images":[],"courses":[]}
+        # subCoursesDates = DatesModel.objects.filter(subCourse__pk=pk)
+        # subCoursesDateSerializer = subCoursesDateSerializer(subCoursesDates,many=True)
+        data= {"info":[],"courses":[]}
         data["info"].append(dict(centreInfoSerializer.data))
-        for x in centreImageSerializer.data:
-            data["images"].append(dict(x))
         for x in subCoursesSerializer.data:
             data["courses"].append(dict(x))
+        # for x in subCoursesDateSerializer.data:
+            # data["dates"].append(dict(x))
         return Response(data)
 
 class CourseView(APIView):
@@ -153,15 +153,15 @@ class CategoriesView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
 
-class CentreImagesView(APIView):
-    def post(self,request,format=None):
-        serializer = CentreImagesSerializer(data=request.data,many=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+# class SubCourseImagesView(APIView):
+#     def post(self,request,format=None):
+#         serializer = CentreImagesSerializer(data=request.data,many=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors)
 
-    def get(self,request,format=None):
-        images = CentreImagesModel.objects.all()   
-        serializer = CentreImagesSerializer(images,many=True)
-        return Response(serializer.data)
+#     def get(self,request,format=None):
+#         images = CentreImagesModel.objects.all()   
+#         serializer = CentreImagesSerializer(images,many=True)
+#         return Response(serializer.data)
