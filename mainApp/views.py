@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer
 # Create your views here.
 import markdown
 
@@ -182,7 +182,7 @@ class CourseView(APIView):
 class CourseDetailsView(APIView):
     """
         ***GET :***\n
-        `=>course`\n
+        `=>course id`\n
         `<= centres:[], course info:{}`
     """
     def get(self, request,pk,format=None):
@@ -220,3 +220,35 @@ class CategoriesView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+class SubCourseDatesView(APIView):
+    """
+        ***GET :***\n
+        `subcourse id dates:[]`\n
+        ***POST :***\n
+        `dates:[]`
+    """ 
+    def get(self, request, pk, format=None):
+        dates =  DatesModel.objects.filter(subCourse__pk = pk)
+        serializer = StartingDateSerializer(dates,many=True)
+        return Response(serializer.data)
+    def post(self, request, pk, format=None):
+        serializer = StartingDateSerializer(data=request.data,many=True)        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true"})
+        return Response(serializer.errors)   
+
+class TrendingSubCoursesView(APIView):
+    """
+        ***GET :***\n
+        `all trending subcourses: []`\n
+    """ 
+    def get(self,request,format=None):
+        trend = SubCoursesModel.objects.filter(is_trend=True)
+        serializer = SubCourseSerializer(trend,many=True)
+        if not trend:
+            return Response({"errors":"no trend courses available"})
+        return Response(serializer.data)
+
+# class RecommendedSubCourses
