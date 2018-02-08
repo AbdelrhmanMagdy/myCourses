@@ -16,13 +16,13 @@ class UserProfileModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, db_index=True)
     mobile = models.CharField(max_length=11)
     fieldOfStudy = models.ManyToManyField(studyCategoriesModel,blank=True,related_name='userCategories') 
-
+    certificate = models.CharField(max_length=500,null=True,blank=True)
     def __str__(self):
         return str(self.user)
 
-class CertificatesModel(models.Model):
-    certificate = models.FileField(upload_to='media/certificates', blank=True,null=True)
-    user = models.ForeignKey(UserProfileModel,on_delete=models.CASCADE, null=True)
+# class CertificatesModel(models.Model):
+    # certificate = models.FileField(upload_to='media/certificates', blank=True,null=True)
+    # user = models.ForeignKey(UserProfileModel,on_delete=models.CASCADE, null=True)
 
 class CoursesModel(models.Model):
     courseName = models.CharField(max_length=50)
