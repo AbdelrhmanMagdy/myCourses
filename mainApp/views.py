@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer
 # Create your views here.
 import markdown
 
@@ -26,7 +26,9 @@ class EmailCheckView(APIView):
 
 class LogInView(APIView):
     def post(self,request):
+        
         user = authenticate(username=request.data['username'], password=request.data['password'])
+        print(user)
         if user is not None:
     	    return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser})
         return Response({"login":"false","errors":"Username or Password isn't correct","request":request.data})
@@ -34,20 +36,24 @@ class LogInView(APIView):
 
 class SignUpView(APIView):
     def post(self,request):
-        userSerializer = UserSerializer(data=request.data)
-        if userSerializer.is_valid():
-            userSerializer.save()
-            user = User.objects.get(username=userSerializer.data['username'])
-            user.email = userSerializer.data['username']
+        serialized = UserSerializer(data=request.data)
+        if serialized.is_valid():
+            user = User.objects.create_user(
+                serialized.data['username'],
+                serialized.data['password']
+            )
+            user.set_password(serialized.data['password'])
+            user.email=serialized.data['username']
             user.save()
-            # print(email)
-            
             return Response({"created":"true","id":user.id})
-        return Response(userSerializer.errors)
+        return Response(serialized.errors)
 
 class UserProfileView(APIView):
     def get(self, request,pk, format=None):
-        user = UserProfileModel.objects.get(user__pk=pk)
+        try:
+            user = UserProfileModel.objects.get(user__pk=pk)
+        except UserProfileModel.DoesNotExist:
+            return Response({"errors":"user profile doesn't exist"})
         serializer = UserProfileSerializer(user)
         return Response(serializer.data)
     def post(self, request,pk,format=None):
@@ -61,10 +67,7 @@ class UserProfileView(APIView):
         request.data['user'] = pk
         profile = UserProfileModel.objects.get(user__pk=pk)
         profileSerializer = UserProfileSerializer(profile,data = request.data)
-        print(request.data)
-        print(profile)
         if profileSerializer.is_valid():
-            # profileSerializer.save()
             return Response({"created":"true"})
         return Response(profileSerializer.errors)
 class CentreView(APIView):
@@ -79,13 +82,44 @@ class CentreView(APIView):
         serializer = CentreSerializer(centres,many=True)
         return Response(serializer.data)
     def post(self, request, format=None):
-        serializer = CentreSerializer(data=request.data,many=True)
+        serializer = CentreSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
 
 
+class CentreDataView(APIView):
+    """
+        ***GET :***\n
+        `centre user id <= centre info:{}`
+        ***POST :***\n
+        `centre user id =>centres info:{}`
+    """    
+    def get(self, request, pk, format=None):
+        try:
+            info =  CentreModel.objects.get(user__pk = pk)
+        except CentreModel.DoesNotExist:
+            return Response({"errors":"error with centre id"})
+        serializer = CentreSerializer(info)
+        return Response(serializer.data)
+    def post(self, request, pk, format=None):
+        request.data['user']=pk
+        print(request.data)
+        serializer = CentreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true"})
+        return Response(serializer.errors)             
+    
+    def put(self, request, pk, format=None):
+        request.data['user']=pk
+        obj = CentreModel.objects.get(user__pk=pk)        
+        serializer = CentreSerializer(obj,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"updated":"true"})
+        return Response(serializer.errors)     
 
 class SubCourseImagesView(APIView):
     """
@@ -148,7 +182,7 @@ class CourseView(APIView):
 class CourseDetailsView(APIView):
     """
         ***GET :***\n
-        `=>course`\n
+        `=>course id`\n
         `<= centres:[], course info:{}`
     """
     def get(self, request,pk,format=None):
@@ -186,3 +220,35 @@ class CategoriesView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+class SubCourseDatesView(APIView):
+    """
+        ***GET :***\n
+        `subcourse id dates:[]`\n
+        ***POST :***\n
+        `dates:[]`
+    """ 
+    def get(self, request, pk, format=None):
+        dates =  DatesModel.objects.filter(subCourse__pk = pk)
+        serializer = StartingDateSerializer(dates,many=True)
+        return Response(serializer.data)
+    def post(self, request, pk, format=None):
+        serializer = StartingDateSerializer(data=request.data,many=True)        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true"})
+        return Response(serializer.errors)   
+
+class TrendingSubCoursesView(APIView):
+    """
+        ***GET :***\n
+        `all trending subcourses: []`\n
+    """ 
+    def get(self,request,format=None):
+        trend = SubCoursesModel.objects.filter(is_trend=True)
+        serializer = SubCourseSerializer(trend,many=True)
+        if not trend:
+            return Response({"errors":"no trend courses available"})
+        return Response(serializer.data)
+
+# class RecommendedSubCourses
