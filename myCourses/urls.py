@@ -29,10 +29,10 @@ urlpatterns = [
     path('api/centres', mainAppViews.CentreView.as_view()),
     path('api/courses', mainAppViews.CourseView.as_view()),
      url(r'^api/courses/(?P<pk>[0-9]+)/$',mainAppViews.CourseDetailsView.as_view()),
-    url(r'^api/centreImages/(?P<pk>[0-9]+)/$', mainAppViews.CentreImagesView.as_view()),
+    url(r'^api/subCourseImages/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseImagesView.as_view()),
+    # url(r'^api/subCourseImages', mainAppViews.SubCourseImagesView.as_view()),
     url(r'^api/centreCourses/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseView.as_view()),
     path('api/categories', mainAppViews.CategoriesView.as_view()),
-    path('api/centreImages', mainAppViews.CentreImagesView.as_view()),
 ]
 urlpatterns += staticfiles_urlpatterns()
 

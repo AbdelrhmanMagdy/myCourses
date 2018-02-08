@@ -33,10 +33,6 @@ class CoursesModel(models.Model):
     def __str__(self):
         return str(self.courseName)
 
-class DatesModel(models.Model):
-    date = models.DateField()
-    def __str__(self):
-        return str(self.date)
 
 class CentreModel(models.Model):
     centreName = models.CharField(max_length=50)
@@ -44,24 +40,31 @@ class CentreModel(models.Model):
     lon = models.DecimalField(max_digits=9, decimal_places=6)
     address = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
+    user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True)
+    image = models.ImageField(upload_to='media/images', blank=True,null=True)
     def __str__(self):
         return str(self.centreName)
 class SubCoursesModel(models.Model):
     instructorName = models.CharField(max_length=50)
-    startingDate = models.ForeignKey(DatesModel, on_delete=models.CASCADE,null=True,blank=True)
     rate =  models.IntegerField()
     fees = models.CharField(max_length=50)
     course = models.ForeignKey(CoursesModel, on_delete=models.CASCADE, null=True,blank=True, related_name='subCourses')
-    subCourseImage = models.ImageField(upload_to='media/images', blank=True,null=True)
     centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE, null=True,blank=True, related_name='centre')
 
     def __str__(self):
         return str(self.instructorName)
-class CentreImagesModel(models.Model):
-    images = models.ImageField(upload_to='media/images', blank=True,null=True)
-    centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE,null=True,blank=True, related_name='images')
+class DatesModel(models.Model):
+    dates = models.DateField()
+    subCourse = models.ForeignKey(SubCoursesModel, on_delete=models.CASCADE,null=True,blank=True, related_name='dates')
+    
     def __str__(self):
-        return str(self.centre.centreName)
+        return str(self.dates)
+class SubCourseImagesModel(models.Model):
+    images = models.ImageField(upload_to='media/images', blank=True,null=True)
+    subCourse = models.ForeignKey(SubCoursesModel, on_delete=models.CASCADE,null=True,blank=True, related_name='images')
+    
+    def __str__(self):
+        return str(self.subCourse.instructorName)
 
 class PromoCodeModel(models.Model):
     promoCode = models.CharField(max_length=50)
