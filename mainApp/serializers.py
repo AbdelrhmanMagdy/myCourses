@@ -61,10 +61,6 @@ class CategorySerializer(serializers.ModelSerializer):
         model =  studyCategoriesModel
         exclude = ('')
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfileModel
-        exclude = ('')
 
 class CertificatesImageSerializer(serializers.ModelSerializer):
     certificates = Base64ImageField(max_length=None, use_url=True,)
@@ -76,7 +72,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password', 'username','is_staff','first_name','last_name','is_superuser')
+        fields = ('password', 'username','is_staff','first_name','is_superuser')
+class UserProfileSerializer(serializers.ModelSerializer):
+    fieldOfStudy = CategorySerializer(many=True,required=False)
+    # user = UserSerializer()
+    class Meta:
+        model = UserProfileModel
+        exclude = ('')
 
 class CentreSerializer(serializers.ModelSerializer):
     class Meta:

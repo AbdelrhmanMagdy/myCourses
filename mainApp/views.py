@@ -28,7 +28,7 @@ class LogInView(APIView):
     def post(self,request):
         user = authenticate(username=request.data['username'], password=request.data['password'])
         if user is not None:
-            return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"last_name":user.last_name,"is_superuser":user.is_superuser})
+            return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser})
         return Response({"login":"false","errors":"Username or Password isn't correct"})
 
 
@@ -55,7 +55,7 @@ class UserProfileView(APIView):
         profileSerializer = UserProfileSerializer(data = request.data)
         if profileSerializer.is_valid():
             profileSerializer.save()
-            return Response(profileSerializer.data)
+            return Response({"created":"true","id":profileSerializer['user']})
         return Response(profileSerializer.errors)
 
 class CentreView(APIView):
