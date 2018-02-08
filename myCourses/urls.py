@@ -26,11 +26,14 @@ urlpatterns = [
     url(r'^api/userProfile/(?P<pk>[0-9]+)/$',mainAppViews.UserProfileView.as_view()),    
     path('api/emailCheck', mainAppViews.EmailCheckView.as_view()),
     path('api/centres', mainAppViews.CentreView.as_view()),
+    url(r'^api/centres/(?P<pk>[0-9]+)/$', mainAppViews.CentreDataView.as_view()),
     path('api/courses', mainAppViews.CourseView.as_view()),
      url(r'^api/courses/(?P<pk>[0-9]+)/$',mainAppViews.CourseDetailsView.as_view()),
     url(r'^api/subCourseImages/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseImagesView.as_view()),
-    # url(r'^api/subCourseImages', mainAppViews.SubCourseImagesView.as_view()),
     url(r'^api/centreCourses/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseView.as_view()),
     url(r'^api/subCourse/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseDetailView.as_view()),
     path('api/categories', mainAppViews.CategoriesView.as_view()),
 ]
+#get centre data /user_id
+#update centre data
+#

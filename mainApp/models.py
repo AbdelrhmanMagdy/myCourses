@@ -40,7 +40,7 @@ class CentreModel(models.Model):
     lon = models.DecimalField(max_digits=9, decimal_places=6)
     address = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
-    user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True)
+    user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True,blank=True)
     image = models.ImageField(upload_to='media/images', blank=True,null=True)
     def __str__(self):
         return str(self.centreName)
