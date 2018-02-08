@@ -251,4 +251,22 @@ class TrendingSubCoursesView(APIView):
             return Response({"errors":"no trend courses available"})
         return Response(serializer.data)
 
-# class RecommendedSubCourses
+class RecommendedCourses(APIView):
+    """
+        ***GET :***\n
+        `all recommended courses filtired by user category: []`\n
+    """    
+    def get(self, request, pk, format=None):
+        try:
+            user = UserProfileModel.objects.get(user__pk=pk)
+        except UserProfileModel.DoesNotExist:
+            return Response({"errors":"user doesn't have categories"})
+        categories = user.fieldOfStudy.all()
+        cat_id = []
+        for x in  categories:
+            cat_id.append(x.id)
+        courses =  CoursesModel.objects.filter(categories__in=cat_id)
+        if not courses:
+            return Response({"errors":"no recommended courses available"})
+        serializer = CoursesSerializer(courses,many=True)
+        return Response(serializer.data)
