@@ -186,19 +186,3 @@ class CategoriesView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-<<<<<<< HEAD
-
-# class SubCourseImagesView(APIView):
-#     def post(self,request,format=None):
-#         serializer = CentreImagesSerializer(data=request.data,many=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors)
-
-#     def get(self,request,format=None):
-#         images = CentreImagesModel.objects.all()   
-#         serializer = CentreImagesSerializer(images,many=True)
-#         return Response(serializer.data)
-=======
->>>>>>> 316bd391ca47caec2de2143151bd2ffda10412b3
