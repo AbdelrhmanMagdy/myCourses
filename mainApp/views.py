@@ -55,7 +55,7 @@ class UserProfileView(APIView):
         profileSerializer = UserProfileSerializer(data = request.data)
         if profileSerializer.is_valid():
             profileSerializer.save()
-            return Response({"created":"true","id":profileSerializer['user']})
+            return Response({"created":"true"})
         return Response(profileSerializer.errors)
 
 class CentreView(APIView):
