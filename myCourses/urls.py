@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^api/admin/', admin.site.urls),
     path('api/signup', mainAppViews.SignUpView.as_view()),
     path('api/login', mainAppViews.LogInView.as_view()),
-    path('api/userProfile', mainAppViews.UserProfileView.as_view()),
+    url(r'^api/userProfile/(?P<pk>[0-9]+)/$',mainAppViews.UserProfileView.as_view()),    
     path('api/emailCheck', mainAppViews.EmailCheckView.as_view()),
     path('api/centres', mainAppViews.CentreView.as_view()),
     path('api/courses', mainAppViews.CourseView.as_view()),
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^api/subCourseImages/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseImagesView.as_view()),
     # url(r'^api/subCourseImages', mainAppViews.SubCourseImagesView.as_view()),
     url(r'^api/centreCourses/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseView.as_view()),
+    url(r'^api/subCourse/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseDetailView.as_view()),
     path('api/categories', mainAppViews.CategoriesView.as_view()),
 ]
 urlpatterns += staticfiles_urlpatterns()

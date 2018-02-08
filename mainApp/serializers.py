@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import CertificatesModel,UserProfileModel,CoursesModel,DatesModel,SubCourseImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel
+from .models import UserProfileModel,CoursesModel,DatesModel,SubCourseImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -55,30 +55,29 @@ class SubCourseImagesSerializer(serializers.ModelSerializer):
     images = Base64ImageField(max_length=None, use_url=True,)
     class Meta:
         model =  SubCourseImagesModel
-        exclude = ('')
+        exclude = ('id',)
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model =  studyCategoriesModel
         exclude = ('')
 
 
-class CertificatesImageSerializer(serializers.ModelSerializer):
-    certificates = Base64ImageField(max_length=None, use_url=True,)
-    class Meta:
-        model = CertificatesModel
-        exclude = ('')
+# class CertificatesImageSerializer(serializers.ModelSerializer):
+#     certificates = Base64ImageField(max_length=None, use_url=True,)
+#     class Meta:
+#         model = CertificatesModel
+#         exclude = ('')
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('password', 'username','is_staff','first_name','is_superuser')
 class UserProfileSerializer(serializers.ModelSerializer):
-    fieldOfStudy = CategorySerializer(many=True,required=False)
+    # fieldOfStudy = CategorySerializer(many=True,required=False)
     # user = UserSerializer()
     class Meta:
         model = UserProfileModel
-        exclude = ('')
+        exclude = ('id',)
 
 class CentreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -86,6 +85,7 @@ class CentreSerializer(serializers.ModelSerializer):
         exclude = ('')
 
 class CoursesSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True,required=False)    
     class Meta:
         model = CoursesModel
         exclude = ('')
@@ -96,7 +96,7 @@ class StartingDateSerializer(serializers.ModelSerializer):
 class SubCourseSerializer(serializers.ModelSerializer):
     dates = StartingDateSerializer(many=True)
     images = SubCourseImagesSerializer(many=True)
-    centre = CentreSerializer()
+    # centre = CentreSerializer()
     class Meta:
         model =  SubCoursesModel
         exclude = ('')
