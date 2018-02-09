@@ -79,24 +79,47 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfileModel
         exclude = ('id',)
 
-class CentreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CentreModel
-        exclude = ('')
 
 class CoursesSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True,required=False)    
     class Meta:
         model = CoursesModel
         exclude = ('')
+class CentreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CentreModel
+        exclude = ('')
 class StartingDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatesModel
         exclude = ('')
+class CoursesSpecificSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoursesModel
+        exclude = ('courseImage','courseSlogun','categories')
 class SubCourseSerializer(serializers.ModelSerializer):
     dates = StartingDateSerializer(many=True)
     images = SubCourseImagesSerializer(many=True)
+    course = CoursesSpecificSerializer()
+    
     # centre = CentreSerializer()
     class Meta:
         model =  SubCoursesModel
         exclude = ('')
+class SubCoursePostSerializer(serializers.ModelSerializer):    
+    dates = StartingDateSerializer(many=True,required=False)
+    images = SubCourseImagesSerializer(many=True,required=False)
+    class Meta:
+        model =  SubCoursesModel
+        exclude = ()
+
+    # def create(self, validated_data):
+    #     dates = validated_data.pop('dates')
+    #     images = validated_data.pop('images')
+    #     subcourse = SubCoursesModel.objects.create(**validated_data)
+    #     for date in dates:
+    #         DatesModel.objects.create(subCourse=subcourse, **dates)
+    #     for image in images:
+    #         SubCourseImagesModel.objects.create(subCourse=subcourse, **images)
+    #     return subcourse
+    

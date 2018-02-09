@@ -36,8 +36,8 @@ class CoursesModel(models.Model):
 
 class CentreModel(models.Model):
     centreName = models.CharField(max_length=50)
-    lat = models.DecimalField(max_digits=100, decimal_places=6)
-    lon = models.DecimalField(max_digits=100, decimal_places=6)
+    lat = models.FloatField()
+    lon = models.FloatField()
     address = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
     user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True,blank=True)
@@ -49,7 +49,7 @@ class SubCoursesModel(models.Model):
     rate =  models.IntegerField(null=True,blank=True)
     fees = models.CharField(max_length=50)
     course = models.ForeignKey(CoursesModel, on_delete=models.CASCADE, null=True,blank=True, related_name='subCourses')
-    centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE, null=True,blank=True, related_name='centre')
+    centre = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True, related_name='centre')
     is_trend = models.BooleanField(default=False,blank=True)
     def __str__(self):
         return str(self.instructorName)

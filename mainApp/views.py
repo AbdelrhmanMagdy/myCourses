@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer
 # Create your views here.
 import markdown
 
@@ -135,6 +135,9 @@ class SubCourseImagesView(APIView):
         serializer = SubCourseImagesSerializer(images,many=True)
         return Response(serializer.data)
     def post(self, request, pk, format=None):
+        for x in request.data:
+            print(x)
+            x['subCourse'] = pk    
         serializer = SubCourseImagesSerializer(data=request.data,many=True)
         if serializer.is_valid():
             serializer.save()
@@ -150,13 +153,20 @@ class SubCourseView(APIView):
     def get(self, request,pk, format=None):
         centreInfo = CentreModel.objects.get(user__pk=pk)
         centreInfoSerializer = CentreSerializer(centreInfo)
-        subcourses = SubCoursesModel.objects.filter(centre__user__pk=pk)
+        subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
         subCoursesSerializer = SubCourseSerializer(subcourses, many=True)
         data= {"courses":[]}
         data["info"]=dict(centreInfoSerializer.data)
         for x in subCoursesSerializer.data:
             data["courses"].append(dict(x))
         return Response(data)
+    def post(self,request,pk,format=None):
+        request.data['centre']=pk
+        serializer = SubCoursePostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true","id":serializer.data['id']})
+        return Response(serializer.errors)
 class SubCourseDetailView(APIView):
     """
         ***GET :***\n
@@ -167,6 +177,7 @@ class SubCourseDetailView(APIView):
         courseInfo = SubCoursesModel.objects.filter(pk=pk)
         serializer = SubCourseSerializer(courseInfo,many=True)
         return Response(serializer.data)
+
 
 class CourseView(APIView):
     """
@@ -233,6 +244,10 @@ class SubCourseDatesView(APIView):
         serializer = StartingDateSerializer(dates,many=True)
         return Response(serializer.data)
     def post(self, request, pk, format=None):
+        for x in request.data:
+            print(x)
+            x['subCourse'] = pk
+            
         serializer = StartingDateSerializer(data=request.data,many=True)        
         if serializer.is_valid():
             serializer.save()
