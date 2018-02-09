@@ -49,7 +49,7 @@ class SubCoursesModel(models.Model):
     rate =  models.IntegerField(null=True,blank=True)
     fees = models.CharField(max_length=50)
     course = models.ForeignKey(CoursesModel, on_delete=models.CASCADE, null=True,blank=True, related_name='subCourses')
-    centre = models.ForeignKey(CentreModel, on_delete=models.CASCADE, null=True,blank=True, related_name='centre')
+    centre = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True, related_name='centre')
     is_trend = models.BooleanField(default=False,blank=True)
     def __str__(self):
         return str(self.instructorName)
