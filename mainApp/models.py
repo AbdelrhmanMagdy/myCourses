@@ -36,8 +36,8 @@ class CoursesModel(models.Model):
 
 class CentreModel(models.Model):
     centreName = models.CharField(max_length=50)
-    lat = models.DecimalField(max_digits=100, decimal_places=6)
-    lon = models.DecimalField(max_digits=100, decimal_places=6)
+    lat = models.FloatField()
+    lon = models.FloatField()
     address = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
     user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True,blank=True)
