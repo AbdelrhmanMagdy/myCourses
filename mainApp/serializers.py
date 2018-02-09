@@ -86,6 +86,7 @@ class CoursesSerializer(serializers.ModelSerializer):
         model = CoursesModel
         exclude = ('')
 class CentreSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length=None, use_url=True,)
     class Meta:
         model = CentreModel
         exclude = ('')
