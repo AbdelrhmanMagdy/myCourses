@@ -54,12 +54,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'corsheaders.middleware.CorsMiddleware',
 ]
-CORS_ORIGIN_WHITELIST = (
-    'localhost:4200',
-    'localhost:4201',
-    'localhost:8000',
-    '127.0.0.1:4200',
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'localhost:4200',
+#     'localhost:4201',
+#     'localhost:8000',
+#     '127.0.0.1:4200',
+# )
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 ROOT_URLCONF = 'myCourses.urls'
