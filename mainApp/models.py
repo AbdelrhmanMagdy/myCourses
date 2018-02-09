@@ -72,8 +72,8 @@ class PromoCodeModel(models.Model):
     def __str__(self):
         return str(self.promoCode)
 class BookingModel(models.Model):
-    user = models.ForeignKey(UserProfileModel ,on_delete=models.CASCADE)
+    user = models.ForeignKey(User ,on_delete=models.CASCADE, related_name='booking')
     promoCode = models.ForeignKey(PromoCodeModel, null=True,blank=True,on_delete=models.CASCADE)
     subCourse = models.ForeignKey(SubCoursesModel,on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.user.user.username)
+        return str(self.user.username)

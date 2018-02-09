@@ -111,15 +111,12 @@ class SubCoursePostSerializer(serializers.ModelSerializer):
     images = SubCourseImagesSerializer(many=True,required=False)
     class Meta:
         model =  SubCoursesModel
-        exclude = ()
-
-    # def create(self, validated_data):
-    #     dates = validated_data.pop('dates')
-    #     images = validated_data.pop('images')
-    #     subcourse = SubCoursesModel.objects.create(**validated_data)
-    #     for date in dates:
-    #         DatesModel.objects.create(subCourse=subcourse, **dates)
-    #     for image in images:
-    #         SubCourseImagesModel.objects.create(subCourse=subcourse, **images)
-    #     return subcourse
-    
+        exclude = ('')
+class PromoCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PromoCodeModel
+        exclude = ('')
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingModel
+        exclude = ('')
