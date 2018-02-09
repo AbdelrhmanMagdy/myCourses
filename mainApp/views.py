@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer
 # Create your views here.
 import markdown
 
@@ -152,7 +152,10 @@ class SubCourseView(APIView):
         `<= courses:[], centre info`
     """
     def get(self, request,pk, format=None):
-        centreInfo = CentreModel.objects.get(user__pk=pk)
+        try:
+            centreInfo = CentreModel.objects.get(user__pk=pk)
+        except CentreModel.DoesNotExist:
+            return Response({"errors":"centre data doesn't exist"})
         centreInfoSerializer = CentreSerializer(centreInfo)
         subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
         subCoursesSerializer = SubCourseSerializer(subcourses, many=True)
@@ -267,7 +270,7 @@ class TrendingSubCoursesView(APIView):
             return Response({"errors":"no trend courses available"})
         return Response(serializer.data)
 
-class RecommendedCourses(APIView):
+class RecommendedCoursesView(APIView):
     """
         ***GET :***\n
         `all recommended courses filtired by user category: []`\n
@@ -287,4 +290,18 @@ class RecommendedCourses(APIView):
         serializer = CoursesSerializer(courses,many=True)
         return Response(serializer.data)
 
-# class BookingCentre
+class PromoCodeView(APIView):
+    def get(self, request, promocode, format=None):
+        try:
+            promocodes = PromoCodeModel.objects.get(promoCode=promocode)
+        except PromoCodeModel.DoesNotExist:
+            return Response({"errors":"promo code not valid"})
+        serializer = PromoCodeSerializer(promocodes)
+        return Response({"discount":promocodes.discount})
+
+class BookaingUserAPI(APIView):
+    def get(self, request, pk, format=None):
+        subcourses = SubCoursesModel.objects.filter(centre__user__pk=pk)
+        subcourseSerializer = BookingSerializer(subcourses,many=True)
+        promocode = BookingModel.objects.filter(user__pk=pk)
+        promoSerializer = PromoCodeSerializer(promocode)

@@ -48,6 +48,24 @@ urlpatterns = [
     #GET array of trending courses
     path('api/trend', mainAppViews.TrendingSubCoursesView.as_view()),
     #GET array of recommended courses using USER ID
-    url(r'^api/recommended/(?P<pk>[0-9]+)/$', mainAppViews.RecommendedCourses.as_view()),
+    url(r'^api/recommended/(?P<pk>[0-9]+)/$', mainAppViews.RecommendedCoursesView.as_view()),
+    url(r'^api/promoCodeCheck/(?P<promocode>\w+)/$', mainAppViews.PromoCodeView.as_view()),
+    
 ]
+
 urlpatterns += staticfiles_urlpatterns()
+
+
+# title of parent
+# instructor name
+# starting date
+# promo code if exits
+
+
+
+# id l user
+# id subCourse
+# promo code if exist string
+# starting date
+
+# promo code api
