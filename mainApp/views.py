@@ -112,10 +112,10 @@ class CentreDataView(APIView):
             return Response({"created":"true"})
         return Response(serializer.errors)             
     
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         request.data['user']=pk
         obj = CentreModel.objects.get(user__pk=pk)        
-        serializer = CentreSerializer(obj,data=request.data)
+        serializer = CentreSerializer(obj,data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response({"updated":"true"})
@@ -285,3 +285,5 @@ class RecommendedCourses(APIView):
             return Response({"errors":"no recommended courses available"})
         serializer = CoursesSerializer(courses,many=True)
         return Response(serializer.data)
+
+# class BookingCentre
