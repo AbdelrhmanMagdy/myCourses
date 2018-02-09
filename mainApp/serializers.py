@@ -116,8 +116,28 @@ class SubCoursePostSerializer(serializers.ModelSerializer):
 class PromoCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PromoCodeModel
-        exclude = ('')
+        exclude = ('id',)
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingModel
         exclude = ('')
+
+class BookingSubCourseSerializer(serializers.ModelSerializer):
+    dates = StartingDateSerializer(many=True)
+    course = CoursesSpecificSerializer()
+    class Meta:
+        model =  SubCoursesModel
+        exclude = ('id','rate','fees','is_trend','centre')
+class BookingUserSerializer(serializers.ModelSerializer):
+    # user = UserSerializer()
+    class Meta:
+        model = User
+        exclude = ('last_login','password','is_superuser','username','last_name','is_staff','is_active','date_joined','groups','user_permissions',)
+
+class BookingFinalSerializer(serializers.ModelSerializer):
+    user = BookingUserSerializer()
+    subCourse = BookingSubCourseSerializer()
+    promoCode = PromoCodeSerializer()
+    class Meta:
+        model = BookingModel
+        exclude = ('id',)

@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer
 # Create your views here.
 import markdown
 
@@ -318,3 +318,19 @@ class BookaingUserAPI(APIView):
             serializer.save()
             return Response({"booking":"true"})
         return Response({"errors":"invalid booking"})
+    def get(self, request, pk, format=None):
+        subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
+        print(subcourses)
+        arr = []
+        for x in subcourses:
+            arr.append(x.id)
+        books = BookingModel.objects.filter(subCourse__pk__in=arr)
+        serializer = BookingFinalSerializer(books,many=True)
+        for x in serializer.data:
+            try:
+                profile = UserProfileModel.objects.get(user__pk=x['user']['id'])
+                x['mobile'] = profile.mobile
+            except UserProfileModel.DoesNotExist:
+                x['mobile']=''
+                pass
+        return Response(serializer.data)
