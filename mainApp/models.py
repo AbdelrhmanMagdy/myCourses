@@ -36,8 +36,8 @@ class CoursesModel(models.Model):
 
 class CentreModel(models.Model):
     centreName = models.CharField(max_length=50)
-    lat = models.FloatField()
-    lon = models.FloatField()
+    lat = models.FloatField(null=True,blank=True)
+    lon = models.FloatField(null=True,blank=True)
     address = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
     user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True,blank=True)
@@ -74,6 +74,6 @@ class PromoCodeModel(models.Model):
 class BookingModel(models.Model):
     user = models.ForeignKey(User ,on_delete=models.CASCADE, related_name='booking')
     promoCode = models.ForeignKey(PromoCodeModel, null=True,blank=True,on_delete=models.CASCADE)
-    subCourse = models.ForeignKey(SubCoursesModel,on_delete=models.CASCADE)
+    subCourse = models.OneToOneField(SubCoursesModel,on_delete=models.CASCADE)
     def __str__(self):
         return str(self.user.username)

@@ -49,6 +49,7 @@ urlpatterns = [
     #GET array of recommended courses using USER ID
     url(r'^api/recommended/(?P<pk>[0-9]+)/$', mainAppViews.RecommendedCoursesView.as_view()),
     url(r'^api/promoCodeCheck/(?P<promocode>\w+)/$', mainAppViews.PromoCodeView.as_view()),
+    url(r'^api/booking/(?P<pk>[0-9]+)/$', mainAppViews.BookaingUserAPI.as_view()),
     
 ]
 

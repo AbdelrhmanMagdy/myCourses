@@ -300,8 +300,21 @@ class PromoCodeView(APIView):
         return Response({"discount":promocodes.discount})
 
 class BookaingUserAPI(APIView):
-    def get(self, request, pk, format=None):
-        subcourses = SubCoursesModel.objects.filter(centre__user__pk=pk)
-        subcourseSerializer = BookingSerializer(subcourses,many=True)
-        promocode = BookingModel.objects.filter(user__pk=pk)
-        promoSerializer = PromoCodeSerializer(promocode)
+    def post(self, request, pk, format=None):
+        request.data['user'] = pk
+        promocode = request.data['promoCode']
+        try:
+            code = PromoCodeModel.objects.get(promoCode=promocode)
+            request.data['promoCode']=code.pk
+            # print(code)
+            users = BookingModel.objects.filter(user__pk=pk)
+            for user in users:
+                if user.promoCode == code:
+                    return Response({"errors":"promo code is expired"})
+        except PromoCodeModel.DoesNotExist:
+            return Response({"errors":"promo code is invalid"})
+        serializer = BookingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"booking":"true"})
+        return Response({"errors":"invalid booking"})
