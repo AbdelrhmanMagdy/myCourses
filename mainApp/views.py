@@ -63,11 +63,12 @@ class UserProfileView(APIView):
             profileSerializer.save()
             return Response({"created":"true"})
         return Response(profileSerializer.errors)
-    def put(self, request,pk,format=None):
+    def patch(self, request,pk,format=None):
         request.data['user'] = pk
         profile = UserProfileModel.objects.get(user__pk=pk)
-        profileSerializer = UserProfileSerializer(profile,data = request.data)
+        profileSerializer = UserProfileSerializer(profile,data = request.data,partial=True)
         if profileSerializer.is_valid():
+            profileSerializer.save()
             return Response({"created":"true"})
         return Response(profileSerializer.errors)
 class CentreView(APIView):
