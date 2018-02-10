@@ -316,21 +316,26 @@ class BookaingUserAPI(APIView):
     def post(self, request, pk, format=None):
         request.data['user'] = pk
         promocode = request.data['promoCode']
-        try:
-            code = PromoCodeModel.objects.get(promoCode=promocode)
-            request.data['promoCode']=code.pk
-            # print(code)
-            users = BookingModel.objects.filter(user__pk=pk)
-            for user in users:
-                if user.promoCode == code:
-                    return Response({"errors":"promo code is expired"})
-        except PromoCodeModel.DoesNotExist:
-            return Response({"errors":"promo code is invalid"})
+        # dates = {"dates":request.data['dates']}
+        # print(dates)
+        # dateSerializer = StartingDateSerializer(dates,many=True)
+        # print(dateSerializer.data)
+        if promocode:
+            try:
+                code = PromoCodeModel.objects.get(promoCode=promocode)
+                request.data['promoCode']=code.pk
+                # print(code)
+                users = BookingModel.objects.filter(user__pk=pk)
+                for user in users:
+                    if user.promoCode == code:
+                        return Response({"errors":"promo code is expired"})
+            except PromoCodeModel.DoesNotExist:
+                return Response({"errors":"promo code is invalid"})
         serializer = BookingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"booking":"true"})
-        return Response({"errors":"invalid booking"})
+        return Response({"errors":"you allready registred in this course"})
     def get(self, request, pk, format=None):
         subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
         print(subcourses)

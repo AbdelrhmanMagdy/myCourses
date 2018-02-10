@@ -67,7 +67,7 @@ class SubCourseImagesModel(models.Model):
         return str(self.subCourse.instructorName)
 
 class PromoCodeModel(models.Model):
-    promoCode = models.CharField(max_length=50)
+    promoCode = models.CharField(max_length=50, blank=True,null=True)
     discount = models.IntegerField()
     def __str__(self):
         return str(self.promoCode)
@@ -75,5 +75,6 @@ class BookingModel(models.Model):
     user = models.ForeignKey(User ,on_delete=models.CASCADE, related_name='booking')
     promoCode = models.ForeignKey(PromoCodeModel, null=True,blank=True,on_delete=models.CASCADE)
     subCourse = models.OneToOneField(SubCoursesModel,on_delete=models.CASCADE, related_name='booking')
+    startingDate = models.CharField(max_length=15, null=True, blank=True)
     def __str__(self):
         return str(self.user.username)
