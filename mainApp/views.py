@@ -213,16 +213,8 @@ class CourseDetailsView(APIView):
             return Response({"error":"course doesn't exist"})
         courseSerializer = CoursesSerializer(courses)
         subCourses = SubCoursesModel.objects.filter(course__pk=pk)
-        # print(subCourses)
-        centres = []
-        for course in subCourses:
-            centres.append(course.centre.centreModel)
-        centresSerializer = CentreSerializer(centres,many=True)
-        # print(centresSerializer.data)
-        data = {"info":dict(courseSerializer.data),"centres":[]}
-        for x in centresSerializer.data:
-            data["centres"].append(dict(x))
-            
+        subcourseSerializer = SubCourseSerializer(subCourses,many=True)
+        data = {"info":dict(courseSerializer.data),"subCourses":subcourseSerializer.data}
         return Response(data)
  
 class CategoriesView(APIView):
