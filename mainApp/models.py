@@ -26,7 +26,7 @@ class UserProfileModel(models.Model):
 
 class CoursesModel(models.Model):
     courseName = models.CharField(max_length=50)
-    courseImage = models.ImageField(upload_to='media/images', blank=True,null=True)
+    courseImage = models.ImageField(upload_to='media/course', blank=True,null=True)
     courseSlogun = models.CharField(max_length=250)
     categories = models.ManyToManyField(studyCategoriesModel,blank=True,related_name='courseCategories') 
 
@@ -41,7 +41,7 @@ class CentreModel(models.Model):
     address = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
     user = models.OneToOneField(User,null=True, on_delete=models.CASCADE, db_index=True,blank=True, related_name='centreModel' )
-    image = models.ImageField(upload_to='media/images', blank=True,null=True)
+    image = models.ImageField(upload_to='media/centre', blank=True,null=True)
     def __str__(self):
         return str(self.centreName)
 class SubCoursesModel(models.Model):
@@ -60,7 +60,7 @@ class DatesModel(models.Model):
     def __str__(self):
         return str(self.dates)
 class SubCourseImagesModel(models.Model):
-    images = models.ImageField(upload_to='media/images', blank=True,null=True)
+    images = models.ImageField(upload_to='media/subCourse', blank=True,null=True)
     subCourse = models.ForeignKey(SubCoursesModel, on_delete=models.CASCADE,null=True,blank=True, related_name='images')
     
     def __str__(self):
