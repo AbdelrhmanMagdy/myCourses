@@ -18,6 +18,7 @@ from django.urls import include, path, re_path
 from django.contrib import admin
 
 from mainApp import views as mainAppViews
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^api/admin/', admin.site.urls),
@@ -52,6 +53,9 @@ urlpatterns = [
     url(r'^api/booking/(?P<pk>[0-9]+)/$', mainAppViews.BookaingUserAPI.as_view()),
     
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+
 
 # title of parent
 # instructor name

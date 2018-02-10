@@ -21,12 +21,12 @@ class EmailCheckView(APIView):
         try:
             email = User.objects.get(username=request.data['username'])
         except User.DoesNotExist:
-            return Response({"exist":"false"})    
-        return Response({"exist":"true"})    
+            return Response({"exist":"false"})
+        return Response({"exist":"true"})
 
 class LogInView(APIView):
     def post(self,request):
-        
+ 
         user = authenticate(username=request.data['username'], password=request.data['password'])
         print(user)
         if user is not None:
@@ -34,8 +34,9 @@ class LogInView(APIView):
                 profile = UserProfileModel.objects.get(user__pk=user.pk)
                 return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':profile.mobile})
             except UserProfileModel.DoesNotExist:
+
                 return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':''})
-                
+
         return Response({"login":"false","errors":"Username or Password isn't correct"})
 
 

@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '*@yf(7g2k74_(3le1f7%yb(zqli&t7afnje-dmja9ehog-rnn('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['46.101.1.65','127.0.0.1','mycoursesapp.com']
 
 
 # Application definition
@@ -53,13 +53,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
 ]
-# CORS_ORIGIN_WHITELIST = (
-#     'localhost:4200',
-#     'localhost:4201',
-#     'localhost:8000',
-#     '127.0.0.1:4200',
-# )
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:4200',
+    'localhost:4201',
+    'localhost:8000',
+    '127.0.0.1:4200',
+    '46.101.1.65:80',
+    'mycoursesapp.com:80',
+)
 CORS_ORIGIN_ALLOW_ALL = True
 
 
@@ -139,4 +144,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
