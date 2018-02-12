@@ -85,4 +85,4 @@ class PromoCodeUserModel(models.Model):
     promoCode = models.CharField(max_length=20, null=True,blank=True)
     discount = models.IntegerField(null=True, blank=True)
     def __str__(self):
-        return str(self.user.username+' '+PromoCode)
+        return str(self.user.username)
