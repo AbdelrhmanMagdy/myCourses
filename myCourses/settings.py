@@ -23,10 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '*@yf(7g2k74_(3le1f7%yb(zqli&t7afnje-dmja9ehog-rnn('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['46.101.1.65','127.0.0.1','mycoursesapp.com']
-
+ALLOWED_HOSTS = ['46.101.1.65','127.0.0.1','mycoursesapp.com','http://mycoursesapp.com','localhost']
 
 # Application definition
 
@@ -45,16 +44,19 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-        'corsheaders.middleware.CorsMiddleware',
+
+   'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+#    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',   
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
-
 ]
 
 CORS_ORIGIN_WHITELIST = (
@@ -64,10 +66,11 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:4200',
     '46.101.1.65:80',
     'mycoursesapp.com:80',
+'http://mycoursesapp.com',
 )
 CORS_ORIGIN_ALLOW_ALL = True
-
-
+CORS_ALLOW_CREDENTIALS = True
+CORS_REPLACE_HTTPS_REFERER = True
 ROOT_URLCONF = 'myCourses.urls'
 
 TEMPLATES = [
