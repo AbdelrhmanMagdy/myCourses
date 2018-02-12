@@ -20,3 +20,5 @@ documents/*
 ASURT-Frontend/
 .idea/*
 .idea
+migrations/*
+migrations/

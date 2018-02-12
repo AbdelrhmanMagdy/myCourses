@@ -22,17 +22,17 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^api/admin/', admin.site.urls),
-    path('api/signup', mainAppViews.SignUpView.as_view()),
-    path('api/login', mainAppViews.LogInView.as_view()),
+    url(r'^api/signup', mainAppViews.SignUpView.as_view()),
+    url(r'^api/login', mainAppViews.LogInView.as_view()),
     #POST GET PUT userprofile data by USER ID
     url(r'^api/userProfile/(?P<pk>[0-9]+)/$',mainAppViews.UserProfileView.as_view()),    
-    path('api/emailCheck', mainAppViews.EmailCheckView.as_view()),
+    url(r'^api/emailCheck', mainAppViews.EmailCheckView.as_view()),
     #GET all centres and its data
-    path('api/centres', mainAppViews.CentreView.as_view()),
+    url(r'^api/centres', mainAppViews.CentreView.as_view()),
     #GET and POST and PUT centre data by user CENTRE ID
     url(r'^api/centres/(?P<pk>[0-9]+)/$', mainAppViews.CentreDataView.as_view()),
     #GET all parent courses  info (categories matching) ex: Android 
-    path('api/courses', mainAppViews.CourseView.as_view()),
+    url(r'^api/courses', mainAppViews.CourseView.as_view()),
     #GET course info and array of centres giving this course by COURSE ID
     url(r'^api/courses/(?P<pk>[0-9]+)/$',mainAppViews.CourseDetailsView.as_view()),
     #POST and GET array of images of subCourses by SUBCOURSE ID
@@ -44,13 +44,14 @@ urlpatterns = [
     #GET and POST array of starting dates using SUBCOURSE ID
     url(r'^api/subCourseDates/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseDatesView.as_view()),
     #GET and POST categories
-    path('api/categories', mainAppViews.CategoriesView.as_view()),
+    url(r'^api/categories', mainAppViews.CategoriesView.as_view()),
     #GET array of trending courses
-    path('api/trend', mainAppViews.TrendingSubCoursesView.as_view()),
+    url(r'^api/trend', mainAppViews.TrendingSubCoursesView.as_view()),
     #GET array of recommended courses using USER ID
     url(r'^api/recommended/(?P<pk>[0-9]+)/$', mainAppViews.RecommendedCoursesView.as_view()),
     url(r'^api/promoCodeCheck/(?P<promocode>\w+)/$', mainAppViews.PromoCodeView.as_view()),
     url(r'^api/booking/(?P<pk>[0-9]+)/$', mainAppViews.BookaingUserAPI.as_view()),
+    url(r'^api/UserPromo/(?P<pk>[0-9]+)/$', mainAppViews.PromoCodeUserView.as_view()),
     
 ]
 
