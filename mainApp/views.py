@@ -354,17 +354,19 @@ class BookaingUserAPI(APIView):
         return Response(serializer.data)
 
 class PromoCodeUserView(APIView):
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, format=None):        
         promoCodes = PromoCodeUserModel.objects.filter(user__pk=pk)
         serializer = PromoCodeUserSerializer(promoCodes,many=True)
         return Response(serializer.data)
     def post(self, request, pk, format=None):
+        request.data['user'] = pk        
         serializer = PromoCodeUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"created":"true"})
         return Response({"errors":"invalid Request"})
     def delete(self, request, pk, format=None):
+        request.data['user'] = pk        
         serializer = PromoCodeUserSerializer(data=request.data)
         if serializer.is_valid():
             try:
