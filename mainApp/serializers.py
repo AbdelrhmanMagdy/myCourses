@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import UserProfileModel,CoursesModel,DatesModel,SubCourseImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel
+from .models import UserProfileModel,CoursesModel,DatesModel,SubCourseImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel, PromoCodeUserModel
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -142,4 +142,9 @@ class BookingFinalSerializer(serializers.ModelSerializer):
     promoCode = PromoCodeSerializer()
     class Meta:
         model = BookingModel
+        exclude = ('id',)
+
+class PromoCodeUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PromoCodeUserModel
         exclude = ('id',)

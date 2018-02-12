@@ -9,10 +9,10 @@ from django.contrib.auth import authenticate
 # Models
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel
+from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel, PromoCodeUserModel
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer
 # Create your views here.
 import markdown
 
@@ -352,3 +352,25 @@ class BookaingUserAPI(APIView):
                 x['mobile']=''
                 pass
         return Response(serializer.data)
+
+class PromoCodeUserView(APIView):
+    def get(self, request, pk, format=None):
+        promoCodes = PromoCodeUserModel.objects.filter(user__pk=pk)
+        serializer = PromoCodeUserSerializer(promoCodes,many=True)
+        return Response(serializer.data)
+    def post(self, request, pk, format=None):
+        serializer = PromoCodeUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true"})
+        return Response({"errors":"invalid Request"})
+    def delete(self, request, pk, format=None):
+        serializer = PromoCodeUserSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                obj = PromoCodeModel.objects.get(promoCode=serializer['promoCode'])
+                obj.delete()
+            except PromoCodeModel.DoesNotExist:
+                return Response({"errors":"invalid Request"})        
+            return Response({"deleted":"true"})
+        return Response({"errors":"invalid Request"})

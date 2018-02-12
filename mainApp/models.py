@@ -78,3 +78,11 @@ class BookingModel(models.Model):
     startingDate = models.CharField(max_length=15, null=True, blank=True)
     def __str__(self):
         return str(self.user.username)
+
+
+class PromoCodeUserModel(models.Model):
+    user = models.ForeignKey(User ,on_delete=models.CASCADE)
+    promoCode = models.CharField(max_length=20, null=True,blank=True)
+    discount = models.IntegerField(null=True, blank=True)
+    def __str__(self):
+        return str(self.user.username+' '+PromoCode)
