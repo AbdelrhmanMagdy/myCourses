@@ -15,6 +15,10 @@ from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesM
 from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer
 # Create your views here.
 import markdown
+from rest_framework_jwt.settings import api_settings
+from django.conf import settings
+
+
 
 class EmailCheckView(APIView):
     def post(self,request):
@@ -28,16 +32,27 @@ class LogInView(APIView):
     def post(self,request):
  
         user = authenticate(username=request.data['username'], password=request.data['password'])
-        print(user)
+        # print(user)
         if user is not None:
+            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+            payload = jwt_payload_handler(user)
+            token = jwt_encode_handler(payload)            
             try:
-                profile = UserProfileModel.objects.get(user__pk=user.pk)
-                return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':profile.mobile})
+                print(UserProfileModel.objects.get(user__pk=user.id))
+                profile = UserProfileModel.objects.get(user__pk=user.id)
             except UserProfileModel.DoesNotExist:
+                return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':'',"token":token})
+            
+            # print(user)
+            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+            # print(user)
 
-                return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':''})
-
-        return Response({"login":"false","errors":"Username or Password isn't correct"})
+            payload = jwt_payload_handler(user)
+            token = jwt_encode_handler(payload)
+            return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':profile.mobile,"token":token})
+        return Response({"login":"false","is_staff":"", "id":"","first_name":"","is_superuser":"",'mobile':''})
 
 
 class SignUpView(APIView):
@@ -51,7 +66,14 @@ class SignUpView(APIView):
             user.set_password(serialized.data['password'])
             user.email=serialized.data['username']
             user.save()
-            return Response({"created":"true","id":user.id})
+
+            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+            print(user)
+    
+            payload = jwt_payload_handler(user)
+            token = jwt_encode_handler(payload)            
+            return Response({"created":"true","id":user.id,"token":token})
         return Response(serialized.errors)
 
 class UserProfileView(APIView):
@@ -365,14 +387,17 @@ class PromoCodeUserView(APIView):
             serializer.save()
             return Response({"created":"true"})
         return Response({"errors":"invalid Request"})
-    def delete(self, request, pk, format=None):
-        request.data['user'] = pk        
-        serializer = PromoCodeUserSerializer(data=request.data)
-        if serializer.is_valid():
-            try:
-                obj = PromoCodeModel.objects.get(promoCode=serializer['promoCode'])
-                obj.delete()
-            except PromoCodeModel.DoesNotExist:
-                return Response({"errors":"invalid Request"})        
-            return Response({"deleted":"true"})
-        return Response({"errors":"invalid Request"})
+    # def delete(self, request, pk, format=None):
+    #     # request.data['user'] = pk        
+    #     # serializer = PromoCodeUserSerializer(data=request.data)
+    #     # if serializer.is_valid():
+    #         # try:
+    #     print(request.data)
+    #     obj = PromoCodeModel.objects.get(ok=request.data['id'])
+    #     print(obj)
+    #     obj.delete()
+    #         # except PromoCodeModel.DoesNotExist:
+    #             # return Response({"errors":"invalid Request"})        
+    #         # return Response({"deleted":"true"})
+    #     print('/////////////////////////')
+    #     return Response({"errors":"invalid Request"})
