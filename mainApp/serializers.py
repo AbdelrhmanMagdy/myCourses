@@ -75,6 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     # fieldOfStudy = CategorySerializer(many=True,required=False)
     # user = UserSerializer()
+    image = Base64ImageField(max_length=None, use_url=True,)
     class Meta:
         model = UserProfileModel
         exclude = ('id',)

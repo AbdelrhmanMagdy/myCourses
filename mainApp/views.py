@@ -139,7 +139,7 @@ class CentreDataView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"created":"true"})
-        return Response(serializer.errors)             
+        return Response({"created":"false","errors":serializer.errors})             
     
     def patch(self, request, pk, format=None):
         request.data['user']=pk

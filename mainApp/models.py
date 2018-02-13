@@ -17,6 +17,7 @@ class UserProfileModel(models.Model):
     mobile = models.CharField(max_length=11)
     fieldOfStudy = models.ManyToManyField(studyCategoriesModel,blank=True,related_name='userCategories') 
     certificate = models.CharField(max_length=500,null=True,blank=True)
+    image = models.ImageField(upload_to='media/userProfiles', blank=True,null=True)
     def __str__(self):
         return str(self.user)
 
