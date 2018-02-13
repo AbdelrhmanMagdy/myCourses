@@ -22,11 +22,11 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^api/admin/', admin.site.urls),
-    url(r'^api/signup/$', mainAppViews.SignUpView.as_view()),
-    url(r'^api/login/$', mainAppViews.LogInView.as_view()),
+    url(r'^api/signup', mainAppViews.SignUpView.as_view()),
+    url(r'^api/login', mainAppViews.LogInView.as_view()),
     #POST GET PUT userprofile data by USER ID
     url(r'^api/userProfile/(?P<pk>[0-9]+)/$',mainAppViews.UserProfileView.as_view()),    
-    url(r'^api/emailCheck/$', mainAppViews.EmailCheckView.as_view()),
+    url(r'^api/emailCheck', mainAppViews.EmailCheckView.as_view()),
     #GET all centres and its data
     url(r'^api/centres/$', mainAppViews.CentreView.as_view()),
     #GET and POST and PUT centre data by user CENTRE ID
