@@ -52,6 +52,8 @@ urlpatterns = [
     url(r'^api/promoCodeCheck/(?P<promocode>\w+)/$', mainAppViews.PromoCodeView.as_view()),
     url(r'^api/booking/(?P<pk>[0-9]+)/$', mainAppViews.BookaingUserAPI.as_view()),
     url(r'^api/UserPromo/(?P<pk>[0-9]+)/$', mainAppViews.PromoCodeUserView.as_view()),
+    # /api/searchCourse?search=russell
+    url(r'^api/searchCourse', mainAppViews.CourseSearchView.as_view()),
     
 ]
 

@@ -18,6 +18,8 @@ import markdown
 from rest_framework_jwt.settings import api_settings
 from django.conf import settings
 
+from rest_framework import generics
+from rest_framework import filters
 
 
 class EmailCheckView(APIView):
@@ -387,17 +389,9 @@ class PromoCodeUserView(APIView):
             serializer.save()
             return Response({"created":"true"})
         return Response({"errors":"invalid Request"})
-    # def delete(self, request, pk, format=None):
-    #     # request.data['user'] = pk        
-    #     # serializer = PromoCodeUserSerializer(data=request.data)
-    #     # if serializer.is_valid():
-    #         # try:
-    #     print(request.data)
-    #     obj = PromoCodeModel.objects.get(ok=request.data['id'])
-    #     print(obj)
-    #     obj.delete()
-    #         # except PromoCodeModel.DoesNotExist:
-    #             # return Response({"errors":"invalid Request"})        
-    #         # return Response({"deleted":"true"})
-    #     print('/////////////////////////')
-    #     return Response({"errors":"invalid Request"})
+
+class CourseSearchView(generics.ListAPIView):
+    queryset = CoursesModel.objects.all()
+    serializer_class = CoursesSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('courseName',)
