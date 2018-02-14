@@ -20,6 +20,8 @@ from django.conf import settings
 
 from rest_framework import generics
 from rest_framework import filters
+from rest_framework import status
+
 
 
 class EmailCheckView(APIView):
@@ -152,6 +154,7 @@ class CentreDataView(APIView):
             return Response({"updated":"true"})
         return Response(serializer.errors)     
 
+
 class SubCourseImagesView(APIView):
     """
         ***GET :***\n
@@ -200,7 +203,18 @@ class SubCourseView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"created":"true","id":serializer.data['id']})
-        return Response(serializer.errors)
+        return Response({"created":"false","errors":"serializer.errors"})
+    def patch(self, request,pk,format=None):
+        request.data['centre']=pk
+        serializer = SubCoursePostSerializer(data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true","id":serializer.data['id']})
+        return Response({"created":"false","errors":"serializer.errors"})
+def deleteCourse(request, pk):
+    centre = SubCoursesModel.objects.get(pk=pk)
+    centre.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 class SubCourseDetailView(APIView):
     """
         ***GET :***\n
