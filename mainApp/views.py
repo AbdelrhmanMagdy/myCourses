@@ -471,7 +471,7 @@ class SocialSignUpView(APIView):
                     payload = jwt_payload_handler(user)
                     token = jwt_encode_handler(payload)
 
-                    return Response({"created":"true","token": token}, status=status.HTTP_201_CREATED)
+                    return Response({"created":"true","id":user.id, "token": token}, status=status.HTTP_201_CREATED)
 
                 else:
                     return Response({"errors": "The Account Already Exists, you should login using your password"},
@@ -495,19 +495,24 @@ class SocialSignInView(APIView):
         social_serializer = SocialSerializer(data=request.data)
         if social_serializer.is_valid():
             try:
-                user = SocialUsers.objects.get(socialID=social_serializer.validated_data["socialID"])
-
+                account = SocialUsers.objects.get(socialID=social_serializer.validated_data["socialID"])
+                user = account.user
             except SocialUsers.DoesNotExist:
                 return Response({"error": "Social account doesn't exist, Please sign up first"}, status=status.HTTP_401_UNAUTHORIZED)
 
             else:
-                if social_serializer.validated_data["provider"] == user.provider:
+                if social_serializer.validated_data["provider"] == account.provider:
 
                     jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
                     jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-                    payload = jwt_payload_handler(user, request.data["stayLoggedIn"])
+                    payload = jwt_payload_handler(user)
                     token = jwt_encode_handler(payload)
-                    return Response({"token": token}, status=status.HTTP_201_CREATED)
+                    try:
+                        profile = UserProfileModel.objects.get(user__pk=user.id)
+                        return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':profile.mobile,"token":token})
+                    except UserProfileModel.DoesNotExist:
+                        return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':'',"token":token})
+                    # return Response({"created":"true","token": token}, status=status.HTTP_201_CREATED)
                 else:
                     return Response({"Error": "Social provider is wrong"}, status=status.HTTP_401_UNAUTHORIZED)
 

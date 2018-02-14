@@ -59,8 +59,8 @@ urlpatterns = [
     # /api/searchCourse?search=russell
     url(r'^api/searchCourse', mainAppViews.CourseSearchView.as_view()),
     #social login
-    url(r'^socialSignIn/', mainAppViews.SocialSignInView.as_view()),
-    url(r'^emailSignUp/', mainAppViews.SocialSignUpView.as_view()),
+    url(r'^api/socialSignIn/', mainAppViews.SocialSignInView.as_view()),
+    url(r'^api/socialSignUp/', mainAppViews.SocialSignUpView.as_view()),
 
     
 ]
