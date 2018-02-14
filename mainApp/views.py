@@ -203,14 +203,8 @@ class SubCourseView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"created":"true","id":serializer.data['id']})
-        return Response({"created":"false","errors":"serializer.errors"})
-    def patch(self, request,pk,format=None):
-        request.data['centre']=pk
-        serializer = SubCoursePostSerializer(data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"created":"true","id":serializer.data['id']})
-        return Response({"created":"false","errors":"serializer.errors"})
+        return Response({"created":"false","errors":serializer.errors})
+
 class deleteCourseView(APIView):
     def delete(self, request, pk):
         try:
@@ -229,6 +223,13 @@ class SubCourseDetailView(APIView):
         courseInfo = SubCoursesModel.objects.filter(pk=pk)
         serializer = SubCourseSerializer(courseInfo,many=True)
         return Response(serializer.data)
+    def patch(self, request,pk,format=None):
+        subCourse = SubCoursesModel.objects.get(pk=pk)
+        serializer = SubCoursePostSerializer(subCourse,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true","id":serializer.data['id']})
+        return Response({"created":"false","errors":serializer.errors})
 
 
 class CourseView(APIView):
