@@ -211,10 +211,14 @@ class SubCourseView(APIView):
             serializer.save()
             return Response({"created":"true","id":serializer.data['id']})
         return Response({"created":"false","errors":"serializer.errors"})
-def deleteCourse(request, pk):
-    centre = SubCoursesModel.objects.get(pk=pk)
-    centre.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+class deleteCourseView(APIView):
+    def delete(self, request, pk):
+        try:
+            centre = SubCoursesModel.objects.get(pk=pk)
+        except SubCoursesModel.DoesNotExist:
+            return Response({"deleted":"false","errors":"this course doesn't exist"})
+        centre.delete()
+        return Response({"deleted":"true"})
 class SubCourseDetailView(APIView):
     """
         ***GET :***\n

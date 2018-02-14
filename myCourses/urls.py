@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'^api/subCourseImages/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseImagesView.as_view()),
     #GET centre info and array of subCourses that given by the centre using user CENTRE ID
     url(r'^api/centreCourses/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseView.as_view()),
-    url(r'^api/deleteCourse/(?P<pk>[0-9]+)/$', mainAppViews.deleteCourse),
+    url(r'^api/deleteCourse/(?P<pk>[0-9]+)/$', mainAppViews.deleteCourseView.as_view()),
     #GET array of subCourse of certain centre using SUBCOURSE ID
     url(r'^api/subCourse/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseDetailView.as_view()),
     #GET and POST array of starting dates using SUBCOURSE ID
