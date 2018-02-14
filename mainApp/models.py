@@ -87,3 +87,13 @@ class PromoCodeUserModel(models.Model):
     discount = models.IntegerField(null=True, blank=True)
     def __str__(self):
         return str(self.user.username)
+
+
+providers = [('facebook', 'Facebook'), ('google', 'Google')]
+class SocialUsers(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    provider = models.CharField(max_length=8, choices=providers)
+    socialID = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user.email

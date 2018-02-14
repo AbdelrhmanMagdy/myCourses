@@ -75,7 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     # fieldOfStudy = CategorySerializer(many=True,required=False)
     # user = UserSerializer()
-    image = Base64ImageField(max_length=None, use_url=True,)
+    image = Base64ImageField(max_length=None, use_url=True,required=False)
     class Meta:
         model = UserProfileModel
         exclude = ('id',)
@@ -88,7 +88,7 @@ class CoursesSerializer(serializers.ModelSerializer):
         model = CoursesModel
         exclude = ('')
 class CentreSerializer(serializers.ModelSerializer):
-    image = Base64ImageField(max_length=None, use_url=True,)
+    image = Base64ImageField(max_length=None, use_url=True,required=False)
     class Meta:
         model = CentreModel
         exclude = ('')
