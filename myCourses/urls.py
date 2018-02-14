@@ -51,10 +51,17 @@ urlpatterns = [
     #GET array of recommended courses using USER ID
     url(r'^api/recommended/(?P<pk>[0-9]+)/$', mainAppViews.RecommendedCoursesView.as_view()),
     url(r'^api/promoCodeCheck/(?P<promocode>\w+)/$', mainAppViews.PromoCodeView.as_view()),
+    #dashboard
     url(r'^api/booking/(?P<pk>[0-9]+)/$', mainAppViews.BookaingUserAPI.as_view()),
+    #mobile app
+    url(r'^api/userBooking/(?P<pk>[0-9]+)/$', mainAppViews.GetUserBooking.as_view()),
     url(r'^api/UserPromo/(?P<pk>[0-9]+)/$', mainAppViews.PromoCodeUserView.as_view()),
     # /api/searchCourse?search=russell
     url(r'^api/searchCourse', mainAppViews.CourseSearchView.as_view()),
+    #social login
+    url(r'^socialSignIn/', mainAppViews.SocialSignInView.as_view()),
+    url(r'^emailSignUp/', mainAppViews.SocialSignUpView.as_view()),
+
     
 ]
 

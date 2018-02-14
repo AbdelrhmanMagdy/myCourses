@@ -89,7 +89,7 @@ class PromoCodeUserModel(models.Model):
         return str(self.user.username)
 
 
-providers = [('facebook', 'Facebook'), ('google', 'Google')]
+providers = [('facebook', 'Facebook'), ('google', 'Google'), ('twitter','Twitter')]
 class SocialUsers(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     provider = models.CharField(max_length=8, choices=providers)

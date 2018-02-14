@@ -9,10 +9,10 @@ from django.contrib.auth import authenticate
 # Models
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel, PromoCodeUserModel
+from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel, PromoCodeUserModel, SocialUsers
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer, SocialUsersSerializer, SocialSerializer, UserBookingSerializer
 # Create your views here.
 import markdown
 from rest_framework_jwt.settings import api_settings
@@ -379,6 +379,7 @@ class BookaingUserAPI(APIView):
             return Response({"booking":"true"})
         return Response({"errors":"you allready registred in this course"})
     def get(self, request, pk, format=None):
+        #for dashboard get user by centre
         subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
         print(subcourses)
         arr = []
@@ -394,6 +395,21 @@ class BookaingUserAPI(APIView):
                 x['mobile']=''
                 pass
         return Response(serializer.data)
+# for android app get all bookings
+class GetUserBooking(APIView):
+    def get(self,request,pk,format=None):
+        books = BookingModel.objects.all()
+        serilaizer = UserBookingSerializer(books,many=True)
+        result = []
+        for book in serilaizer.data:
+            # print(book['subCourse'])
+            course = CoursesModel.objects.get(pk=book['subCourse']['course']['id'])
+            try:
+                centre = CentreModel.objects.get(user__pk=book['subCourse']['centre'])
+            except CentreModel.DoesNotExist:
+                return Response({"errors":"centre doesn't exists"})
+            result.append({"courseName":course.courseName,"courseImage":str(course.courseImage),"startData":book['startingDate'],"centreName":centre.centreName})
+        return Response(result)
 
 class PromoCodeUserView(APIView):
     def get(self, request, pk, format=None):        
@@ -413,3 +429,87 @@ class CourseSearchView(generics.ListAPIView):
     serializer_class = CoursesSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('courseName',)
+
+
+
+class SocialSignUpView(APIView):
+
+    def post(self, request):
+
+        social_serializer = SocialSerializer(data=request.data)
+        social_serializer_email = SocialUsersSerializer(data=request.data)
+
+        if social_serializer_email.is_valid() and social_serializer.is_valid():
+
+            try:
+                social_serializer_email.validated_data["email"]
+            except KeyError:
+                return Response({"error": "Some data is missing"}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+
+                SocialUsers.objects.get(socialID=social_serializer.validated_data["socialID"])
+
+            except SocialUsers.DoesNotExist:
+
+                try:
+                    User.objects.get(email=social_serializer_email.validated_data["email"])
+
+                except User.DoesNotExist:
+
+                    try:
+                        user = User.objects.create_user(username=social_serializer_email.validated_data["email"],
+                                                        email=social_serializer_email.validated_data["email"])
+                        social_serializer.save(user=user)
+                    except Exception as e:
+                        print('%s (%s)' % (e.message, type(e)))
+                        Response({"errors": "Please try again later"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+                    payload = jwt_payload_handler(user)
+                    token = jwt_encode_handler(payload)
+
+                    return Response({"created":"true","token": token}, status=status.HTTP_201_CREATED)
+
+                else:
+                    return Response({"errors": "The Account Already Exists, you should login using your password"},
+                                    status=status.HTTP_401_UNAUTHORIZED)
+
+            else:
+                return Response({"errors": "Social Account Already Exists!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        else:
+            social_serializer_email.is_valid()
+            social_serializer.is_valid()
+            errors = social_serializer.errors;
+            errors.update(social_serializer_email.errors)
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SocialSignInView(APIView):
+
+    def post(self, request):
+
+        social_serializer = SocialSerializer(data=request.data)
+        if social_serializer.is_valid():
+            try:
+                user = SocialUsers.objects.get(socialID=social_serializer.validated_data["socialID"])
+
+            except SocialUsers.DoesNotExist:
+                return Response({"error": "Social account doesn't exist, Please sign up first"}, status=status.HTTP_401_UNAUTHORIZED)
+
+            else:
+                if social_serializer.validated_data["provider"] == user.provider:
+
+                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+                    payload = jwt_payload_handler(user, request.data["stayLoggedIn"])
+                    token = jwt_encode_handler(payload)
+                    return Response({"token": token}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"Error": "Social provider is wrong"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        else:
+            return Response(social_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
