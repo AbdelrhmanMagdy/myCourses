@@ -418,7 +418,7 @@ class GetUserBooking(APIView):
         return Response(result)
 
 class PromoCodeUserView(APIView):
-    def get(self, request, pk, format=None):        
+    def get(self, request, pk, format=None):
         promoCodes = PromoCodeUserModel.objects.filter(user__pk=pk)
         serializer = PromoCodeUserSerializer(promoCodes,many=True)
         return Response(serializer.data)
@@ -532,3 +532,15 @@ class SocialSignInView(APIView):
         else:
             return Response(social_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class DatesUpdateView(APIView):
+    def get(self, request, pk, format=None):
+        date = DatesModel.objects.filter(pk=pk)
+        serializer = StartingDateSerializer(date)
+        return Response(serializer.data)
+    # def patch(self, request,pk,format=None):
+    #     date = DatesModel.objects.get(pk=pk)
+    #     serializer = SubCoursePostSerializer(date,data=request.data,partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response({"created":"true","id":serializer.data})
+    #     return Response({"created":"false","errors":serializer.errors})

@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'^api/subCourse/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseDetailView.as_view()),
     #GET and POST array of starting dates using SUBCOURSE ID
     url(r'^api/subCourseDates/(?P<pk>[0-9]+)/$', mainAppViews.SubCourseDatesView.as_view()),
+    url(r'^api/updateDate/(?P<pk>[0-9]+)/$', mainAppViews.DatesUpdateView.as_view()),
     #GET and POST categories
     url(r'^api/categories/$', mainAppViews.CategoriesView.as_view()),
     #GET array of trending courses
@@ -62,6 +63,7 @@ urlpatterns = [
     #social login
     url(r'^api/socialSignIn/', mainAppViews.SocialSignInView.as_view()),
     url(r'^api/socialSignUp/', mainAppViews.SocialSignUpView.as_view()),
+    url(r'^api/dates/', mainAppViews.DatesUpdateView.as_view()),
 
     
 ]
