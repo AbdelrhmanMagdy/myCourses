@@ -69,6 +69,7 @@ class SignUpView(APIView):
             )
             user.set_password(serialized.data['password'])
             user.email=serialized.data['username']
+            user.first_name=serialized.data['first_name']
             user.save()
 
             jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
