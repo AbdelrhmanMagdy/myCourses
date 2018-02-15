@@ -404,7 +404,7 @@ class BookaingUserAPI(APIView):
 # for android app get all bookings
 class GetUserBooking(APIView):
     def get(self,request,pk,format=None):
-        books = BookingModel.objects.all()
+        books = BookingModel.objects.filter(user__pk=pk)
         serilaizer = UserBookingSerializer(books,many=True)
         result = []
         for book in serilaizer.data:
