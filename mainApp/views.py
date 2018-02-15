@@ -535,12 +535,12 @@ class SocialSignInView(APIView):
 class DatesUpdateView(APIView):
     def get(self, request, pk, format=None):
         date = DatesModel.objects.filter(pk=pk)
-        serializer = StartingDateSerializer(date)
+        serializer = StartingDateSerializer(date,many=True)
         return Response(serializer.data)
-    # def patch(self, request,pk,format=None):
-    #     date = DatesModel.objects.get(pk=pk)
-    #     serializer = SubCoursePostSerializer(date,data=request.data,partial=True)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response({"created":"true","id":serializer.data})
-    #     return Response({"created":"false","errors":serializer.errors})
+    def patch(self, request,pk,format=None):
+        date = DatesModel.objects.get(pk=pk)
+        serializer = StartingDateSerializer(date,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"true","id":serializer.data})
+        return Response({"created":"false","errors":serializer.errors})
