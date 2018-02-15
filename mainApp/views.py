@@ -426,8 +426,12 @@ class PromoCodeUserView(APIView):
         request.data['user'] = pk        
         serializer = PromoCodeUserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"created":"true"})
+            try:
+                found = PromoCodeUserModel.objects.get(promoCode=serializer.validated_data['promoCode'])
+                return Response({"errors":"this promo code is used"})
+            except PromoCodeUserModel.DoesNotExist:
+                serializer.save()
+                return Response({"created":"true"})
         return Response({"errors":"invalid Request"})
 
 class CourseSearchView(generics.ListAPIView):
