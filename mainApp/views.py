@@ -242,6 +242,11 @@ class CourseView(APIView):
         courses = CoursesModel.objects.all()
         serializer = CoursesSerializer(courses,many=True)
         return Response(serializer.data)
+class CourseLangView(APIView):
+    def get(self, request,format=None):
+        courses = CoursesModel.objects.filter(categories__category='language')
+        serializer = CoursesSerializer(courses,many=True)
+        return Response(serializer.data)
 
 class CourseDetailsView(APIView):
     """
@@ -461,6 +466,9 @@ class SocialSignUpView(APIView):
                     try:
                         user = User.objects.create_user(username=social_serializer_email.validated_data["email"],
                                                         email=social_serializer_email.validated_data["email"])
+                        user.first_name=request.data['first_name']
+                        user.save()
+                        # print(social_serializer.data)
                         social_serializer.save(user=user)
                     except Exception as e:
                         print('%s (%s)' % (e.message, type(e)))
@@ -515,7 +523,8 @@ class SocialSignInView(APIView):
                         return Response({"login":"true","is_staff":user.is_staff, "id":user.id,"first_name":user.first_name,"is_superuser":user.is_superuser,'mobile':'',"token":token})
                     # return Response({"created":"true","token": token}, status=status.HTTP_201_CREATED)
                 else:
-                    return Response({"Error": "Social provider is wrong"}, status=status.HTTP_401_UNAUTHORIZED)
+                    return Response({"errors": "Social provider is wrong"}, status=status.HTTP_401_UNAUTHORIZED)
 
         else:
             return Response(social_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

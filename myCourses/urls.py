@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^api/centres/(?P<pk>[0-9]+)/$', mainAppViews.CentreDataView.as_view()),
     #GET all parent courses  info (categories matching) ex: Android 
     url(r'^api/courses/$', mainAppViews.CourseView.as_view()),
+    url(r'^api/coursesLang/$', mainAppViews.CourseLangView.as_view()),
     #GET course info and array of centres giving this course by COURSE ID
     url(r'^api/courses/(?P<pk>[0-9]+)/$',mainAppViews.CourseDetailsView.as_view()),
     #POST and GET array of images of subCourses by SUBCOURSE ID
@@ -64,7 +65,6 @@ urlpatterns = [
 
     
 ]
-
 urlpatterns += staticfiles_urlpatterns()
 
 
