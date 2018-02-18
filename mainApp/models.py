@@ -47,6 +47,7 @@ class CentreModel(models.Model):
         return str(self.centreName)
 class SubCoursesModel(models.Model):
     instructorName = models.CharField(max_length=50)
+    info = models.CharField(max_length=10000,null=True,blank=True)    
     rate =  models.IntegerField(null=True,blank=True)
     fees = models.CharField(max_length=50)
     course = models.ForeignKey(CoursesModel, on_delete=models.CASCADE, null=True,blank=True, related_name='subCourses')
