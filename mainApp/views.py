@@ -214,6 +214,14 @@ class deleteCourseView(APIView):
             return Response({"deleted":"false","errors":"this course doesn't exist"})
         centre.delete()
         return Response({"deleted":"true"})
+class deleteBookingView(APIView):
+    def delete(self, request, pk):
+        try:
+            book = BookingModel.objects.get(pk=pk)
+        except SubCoursesModel.DoesNotExist:
+            return Response({"deleted":"false","errors":"this course doesn't exist"})
+        book.delete()
+        return Response({"deleted":"true"})
 class SubCourseDetailView(APIView):
     """
         ***GET :***\n
@@ -248,7 +256,15 @@ class CourseLangView(APIView):
         courses = CoursesModel.objects.filter(categories__category='language')
         serializer = CoursesSerializer(courses,many=True)
         return Response(serializer.data)
-
+class CourseFilterView(APIView):
+    def get(self, request, param,format=None):
+        print('////////////////////')
+    
+        param.replace('%20',' ')
+        print(param)
+        courses = CoursesModel.objects.filter(categories__category=param)
+        serializer = CoursesSerializer(courses,many=True)
+        return Response(serializer.data)
 class CourseDetailsView(APIView):
     """
         ***GET :***\n

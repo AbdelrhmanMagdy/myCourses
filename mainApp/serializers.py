@@ -148,7 +148,7 @@ class BookingFinalSerializer(serializers.ModelSerializer):
     promoCode = PromoCodeSerializer()
     class Meta:
         model = BookingModel
-        exclude = ('id',)
+        exclude = ('')
 
 class PromoCodeUserSerializer(serializers.ModelSerializer):
     class Meta:
