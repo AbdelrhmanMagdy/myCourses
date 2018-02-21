@@ -76,7 +76,7 @@ class PromoCodeModel(models.Model):
 class BookingModel(models.Model):
     user = models.ForeignKey(User ,on_delete=models.CASCADE, related_name='booking')
     promoCode = models.ForeignKey(PromoCodeModel, null=True,blank=True,on_delete=models.CASCADE)
-    subCourse = models.OneToOneField(SubCoursesModel,on_delete=models.CASCADE, related_name='booking')
+    subCourse = models.ForeignKey(SubCoursesModel,on_delete=models.CASCADE, related_name='booking')
     startingDate = models.CharField(max_length=15, null=True, blank=True)
     def __str__(self):
         return str(self.user.username)
