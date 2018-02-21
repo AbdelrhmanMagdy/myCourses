@@ -386,6 +386,10 @@ class BookaingUserAPI(APIView):
         # print(dates)
         # dateSerializer = StartingDateSerializer(dates,many=True)
         # print(dateSerializer.data)
+        booked = BookingModel.objects.filter(user__pk=pk)
+        for book in booked:
+            if book.subCourse.pk==request.data['subCourse']:
+                return Response({"error":"this course is already reserved"})
         if promocode:
             try:
                 code = PromoCodeModel.objects.get(promoCode=promocode)
