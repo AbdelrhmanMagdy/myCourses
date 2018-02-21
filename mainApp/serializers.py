@@ -119,7 +119,7 @@ class SubCoursePostSerializer(serializers.ModelSerializer):
 class PromoCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PromoCodeModel
-        exclude = ('id',)
+        exclude = ('')
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingModel
@@ -151,6 +151,7 @@ class BookingFinalSerializer(serializers.ModelSerializer):
         exclude = ('')
 
 class PromoCodeUserSerializer(serializers.ModelSerializer):
+    # promoCode = PromoCodeSerializer(read_only=True)
     class Meta:
         model = PromoCodeUserModel
         exclude = ('')

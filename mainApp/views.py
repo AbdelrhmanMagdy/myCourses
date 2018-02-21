@@ -375,7 +375,7 @@ class PromoCodeView(APIView):
         except PromoCodeModel.DoesNotExist:
             return Response({"errors":"promo code not valid"})
         serializer = PromoCodeSerializer(promocodes)
-        return Response({"discount":promocodes.discount})
+        return Response({"discount":promocodes.discount,"id":promocodes.pk})
 
 class BookaingUserAPI(APIView):
     def post(self, request, pk, format=None):
@@ -444,12 +444,15 @@ class PromoCodeUserView(APIView):
         serializer = PromoCodeUserSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                found = PromoCodeUserModel.objects.get(promoCode=serializer.validated_data['promoCode'])
-                return Response({"errors":"this promo code is used"})
+                found = PromoCodeModel.objects.get(pk=request.data['promoCode'])
+            except PromoCodeUserModel.DoesNotExist:
+                return Response({"errors":"this promo code isn't valid"})
+            try:
+                obj = PromoCodeUserModel.objects.get(promoCode=request.data['promoCode'])
             except PromoCodeUserModel.DoesNotExist:
                 serializer.save()
                 return Response({"created":"true"})
-        return Response({"errors":"invalid Request"})
+        return Response({"errors":"PromoCode is allready used"})
 
 class CourseSearchView(generics.ListAPIView):
     queryset = CoursesModel.objects.all()
