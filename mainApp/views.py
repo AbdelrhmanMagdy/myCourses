@@ -400,7 +400,7 @@ class BookaingUserAPI(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"booking":"true"})
-        return Response({"errors":"you allready registred in this course"})
+        return Response({"errors":"you are already registred in this course"})
     def get(self, request, pk, format=None):
         #for dashboard get user by centre
         subcourses = SubCoursesModel.objects.filter(centre__pk=pk)
@@ -452,7 +452,7 @@ class PromoCodeUserView(APIView):
             except PromoCodeUserModel.DoesNotExist:
                 serializer.save()
                 return Response({"created":"true"})
-        return Response({"errors":"PromoCode is allready used"})
+        return Response({"errors":"PromoCode is already used"})
 
 class CourseSearchView(generics.ListAPIView):
     queryset = CoursesModel.objects.all()
