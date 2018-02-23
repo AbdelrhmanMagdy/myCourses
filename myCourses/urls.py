@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'^api/courseFilter/(?P<param>\w+)/$', mainAppViews.CourseFilterView.as_view()),
     #dashboard
     url(r'^api/booking/(?P<pk>[0-9]+)/$', mainAppViews.BookaingUserAPI.as_view()),
+    url(r'^api/bookingGet/(?P<pk>[0-9]+)/$', mainAppViews.BookingGetAPI.as_view()),
     url(r'^api/deleteBooking/(?P<pk>[0-9]+)/$', mainAppViews.deleteBookingView.as_view()),
     #mobile app
     url(r'^api/userBooking/(?P<pk>[0-9]+)/$', mainAppViews.GetUserBooking.as_view()),

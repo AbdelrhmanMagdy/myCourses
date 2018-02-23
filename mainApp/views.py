@@ -376,7 +376,23 @@ class PromoCodeView(APIView):
             return Response({"errors":"promo code not valid"})
         serializer = PromoCodeSerializer(promocodes)
         return Response({"discount":promocodes.discount,"id":promocodes.pk})
-
+class BookingGetAPI(APIView):
+    #for android app
+    def get(self, request, pk, format=None):
+        #for dashboard get user by centre
+        try:
+            books = PromoCodeModel.objects.get(pk=pk)
+        except PromoCodeModel.DoesNotExist:
+            return Response({"error":"this booking object doesn't exist"})
+        serializer = PromoCodeSerializer(books)
+        return Response(serializer.data)
+    def delete(self, request, pk):
+        try:
+            books = PromoCodeModel.objects.get(pk=pk)
+        except PromoCodeModel.DoesNotExist:
+            return Response({"deleted":"false","errors":"this promo code doesn't exist"})
+        books.delete()
+        return Response({"deleted":"true"})    
 class BookaingUserAPI(APIView):
     #post for mobile app and get for dashboard
     def post(self, request, pk, format=None):
