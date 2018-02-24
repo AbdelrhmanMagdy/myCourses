@@ -130,7 +130,7 @@ class UserBookingSerializer(serializers.ModelSerializer):
     subCourse = SubCourseSerializer()
     class Meta:
         model = BookingModel
-        exclude = ('id','user')
+        exclude = ('user')
 class BookingSubCourseSerializer(serializers.ModelSerializer):
     dates = StartingDateSerializer(many=True)
     course = CoursesSpecificSerializer()
