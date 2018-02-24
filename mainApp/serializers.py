@@ -121,6 +121,7 @@ class PromoCodeSerializer(serializers.ModelSerializer):
         model = PromoCodeModel
         exclude = ('')
 class BookingSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = BookingModel
         exclude = ('')
@@ -156,7 +157,11 @@ class PromoCodeUserSerializer(serializers.ModelSerializer):
         model = PromoCodeUserModel
         exclude = ('')
 
-
+class PromoCodeUserPlusSerializer(serializers.ModelSerializer):
+    promoCode = PromoCodeSerializer(read_only=True)
+    class Meta:
+        model = PromoCodeUserModel
+        exclude = ('')
 
 
 class SocialSerializer(serializers.ModelSerializer):

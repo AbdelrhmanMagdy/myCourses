@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel, PromoCodeUserModel, SocialUsers
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer, SocialUsersSerializer, SocialSerializer, UserBookingSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer, SocialUsersSerializer, SocialSerializer, UserBookingSerializer, PromoCodeUserPlusSerializer
 # Create your views here.
 import markdown
 from rest_framework_jwt.settings import api_settings
@@ -376,21 +376,12 @@ class PromoCodeView(APIView):
             return Response({"errors":"promo code not valid"})
         serializer = PromoCodeSerializer(promocodes)
         return Response({"discount":promocodes.discount,"id":promocodes.pk})
-class BookingGetAPI(APIView):
-    #for android app
-    def get(self, request, pk, format=None):
-        #for dashboard get user by centre
-        try:
-            books = PromoCodeModel.objects.get(pk=pk)
-        except PromoCodeModel.DoesNotExist:
-            return Response({"error":"this booking object doesn't exist"})
-        serializer = PromoCodeSerializer(books)
-        return Response(serializer.data)
+class BookingDeleteAPI(APIView):
     def delete(self, request, pk):
         try:
-            books = PromoCodeModel.objects.get(pk=pk)
-        except PromoCodeModel.DoesNotExist:
-            return Response({"deleted":"false","errors":"this promo code doesn't exist"})
+            books = PromoCodeUserModel.objects.get(pk=pk)
+        except PromoCodeUserModel.DoesNotExist:
+            return Response({"deleted":"false","errors":"this booking doesn't exist"})
         books.delete()
         return Response({"deleted":"true"})    
 class BookaingUserAPI(APIView):
@@ -459,7 +450,7 @@ class GetUserBooking(APIView):
 class PromoCodeUserView(APIView):
     def get(self, request, pk, format=None):
         promoCodes = PromoCodeUserModel.objects.filter(user__pk=pk)
-        serializer = PromoCodeUserSerializer(promoCodes,many=True)
+        serializer = PromoCodeUserPlusSerializer(promoCodes,many=True)
         return Response(serializer.data)
     def post(self, request, pk, format=None):
         request.data['user'] = pk        
@@ -473,7 +464,7 @@ class PromoCodeUserView(APIView):
                 obj = PromoCodeUserModel.objects.get(promoCode=request.data['promoCode'])
             except PromoCodeUserModel.DoesNotExist:
                 serializer.save()
-                return Response({"created":"true"})
+                return Response({"created":"true","data":serializer.data})
         return Response({"errors":"PromoCode is already used"})
 
 class CourseSearchView(generics.ListAPIView):
