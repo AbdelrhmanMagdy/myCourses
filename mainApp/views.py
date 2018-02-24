@@ -442,12 +442,13 @@ class GetUserBooking(APIView):
         result = []
         for book in serilaizer.data:
             # print(book['subCourse'])
+            book['id']=book['id']
             course = CoursesModel.objects.get(pk=book['subCourse']['course']['id'])
             try:
                 centre = CentreModel.objects.get(user__pk=book['subCourse']['centre'])
             except CentreModel.DoesNotExist:
                 return Response({"errors":"centre doesn't exists"})
-            result.append({"courseName":course.courseName,"courseImage":str(course.courseImage),"startData":book['startingDate'],"centreName":centre.centreName})
+            result.append({"courseName":course.courseName,"courseImage":str(course.courseImage),"startData":book['startingDate'],"centreName":centre.centreName,"id":book['id']})
         return Response(result)
 
 class PromoCodeUserView(APIView):
