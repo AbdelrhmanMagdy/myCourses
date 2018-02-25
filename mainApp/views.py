@@ -379,8 +379,8 @@ class PromoCodeView(APIView):
 class BookingDeleteAPI(APIView):
     def delete(self, request, pk):
         try:
-            books = PromoCodeUserModel.objects.get(pk=pk)
-        except PromoCodeUserModel.DoesNotExist:
+            books = BookingModel.objects.get(pk=pk)
+        except BookingModel.DoesNotExist:
             return Response({"deleted":"false","errors":"this booking doesn't exist"})
         books.delete()
         return Response({"deleted":"true"})    
