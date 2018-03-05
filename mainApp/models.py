@@ -16,8 +16,9 @@ class UserProfileModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, db_index=True, related_name='userProfile')
     mobile = models.CharField(max_length=11)
     fieldOfStudy = models.ManyToManyField(studyCategoriesModel,blank=True,related_name='userCategories') 
-    certificate = models.CharField(max_length=500,null=True,blank=True)
+    certificate = models.TextField(null=True,blank=True)
     image = models.ImageField(upload_to='media/userProfiles', blank=True,null=True,default='media/logo.png')
+    reg_token = models.TextField(null=True, blank=True)
     def __str__(self):
         return str(self.user)
 
@@ -99,3 +100,10 @@ class SocialUsers(models.Model):
 
     def __str__(self):
         return self.user.email
+
+class MsgSubcourse(models.Model):
+    subCourse = models.ForeignKey(SubCoursesModel,on_delete=models.CASCADE)
+    title = models.CharField(max_length=100,blank=True)
+    message = models.TextField(blank=True)
+    def __str__(self):
+        return self.title

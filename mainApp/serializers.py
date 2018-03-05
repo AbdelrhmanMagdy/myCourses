@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import UserProfileModel,CoursesModel,DatesModel,SubCourseImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel, PromoCodeUserModel, SocialUsers
+from .models import UserProfileModel,CoursesModel,DatesModel,SubCourseImagesModel,CentreModel,SubCoursesModel,PromoCodeModel,BookingModel, studyCategoriesModel, PromoCodeUserModel, SocialUsers, MsgSubcourse
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -176,3 +176,7 @@ class SocialUsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email','first_name')
+class MsgSubcourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MsgSubcourse
+        exclude = ('id',)

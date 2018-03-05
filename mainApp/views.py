@@ -9,10 +9,10 @@ from django.contrib.auth import authenticate
 # Models
 from .models import UserProfileModel
 from django.contrib.auth.models import User
-from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel, PromoCodeUserModel, SocialUsers
+from .models import UserProfileModel, CoursesModel, DatesModel, SubCourseImagesModel, CentreModel, SubCoursesModel, PromoCodeModel, BookingModel, studyCategoriesModel, PromoCodeUserModel, SocialUsers, MsgSubcourse
 
 # Serializers
-from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer, SocialUsersSerializer, SocialSerializer, UserBookingSerializer, PromoCodeUserPlusSerializer
+from .serializers import UserSerializer, UserProfileSerializer, CentreSerializer, SubCourseImagesSerializer, CoursesSerializer, SubCourseSerializer, CategorySerializer, SubCourseImagesSerializer, StartingDateSerializer, SubCoursePostSerializer, PromoCodeSerializer, BookingSerializer, BookingFinalSerializer, PromoCodeUserSerializer, SocialUsersSerializer, SocialSerializer, UserBookingSerializer, PromoCodeUserPlusSerializer, MsgSubcourseSerializer
 # Create your views here.
 import markdown
 from rest_framework_jwt.settings import api_settings
@@ -581,3 +581,22 @@ class DatesUpdateView(APIView):
             serializer.save()
             return Response({"created":"true","id":serializer.data})
         return Response({"created":"false","errors":serializer.errors})
+
+class MsgSubcourseView(APIView):
+    # post msgsubcourse model
+    def post(self, request, pk, format=None):
+        request.data['subCourse'] = pk
+        serializer = MsgSubcourseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"created":"True"})    
+        return Response({"created":"False","errors":serializer.errors})    
+    # get tokens of booked users using id of the subcourse
+    def get(self, request, pk, format=None):
+        bookedUsers = BookingModel.objects.filter(subCourse__pk=pk)
+        tokens = []
+        print(bookedUsers)
+        for user in bookedUsers:
+            tokens.append(user.user.userProfile.reg_token)
+        print(tokens)
+        return Response({"data":tokens})   

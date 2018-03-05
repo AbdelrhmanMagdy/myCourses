@@ -67,7 +67,8 @@ urlpatterns = [
     url(r'^api/socialSignIn/', mainAppViews.SocialSignInView.as_view()),
     url(r'^api/socialSignUp/', mainAppViews.SocialSignUpView.as_view()),
     url(r'^api/dates/', mainAppViews.DatesUpdateView.as_view()),
-
+    #post msg,title,subcourse id
+    url(r'^api/subcourseMsg/(?P<pk>[0-9]+)/$', mainAppViews.MsgSubcourseView.as_view()),
     
 ]
 urlpatterns += staticfiles_urlpatterns()
