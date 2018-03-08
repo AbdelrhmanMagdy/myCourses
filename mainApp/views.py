@@ -600,3 +600,15 @@ class MsgSubcourseView(APIView):
             tokens.append(user.user.userProfile.reg_token)
         print(tokens)
         return Response({"data":tokens})   
+
+class subCourseMsgView(APIView):
+    # given forign keys of users  and get MSGs object by thier booked subcourse
+    def post(self,request, format=None):
+        subcourses = request.data
+        data = {}
+        for subcourse in subcourses:
+            bookedCourses = MsgSubcourse.objects.filter(subCourse__pk=subcourse)
+            serializer = MsgSubcourseSerializer(bookedCourses, many=True)
+            data[subcourse] = serializer.data
+        return Response({"data":data})   
+        
