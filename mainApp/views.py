@@ -410,7 +410,7 @@ class BookaingUserAPI(APIView):
         if serializer.is_valid():
             if promocode:
                 try:
-                    promo =  PromoCodeUserModel.objects.get(promoCode__pk=request.data['promoCode'])
+                    promo =  PromoCodeUserModel.objects.get(promoCode__pk=request.data['promoCode'],user=request.data['user'])
                 except PromoCodeUserModel.DoesNotExist:
                     return Response({"errors":"user promo code is invalid"})
                 serializer.save()
