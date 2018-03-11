@@ -458,6 +458,7 @@ class PromoCodeUserView(APIView):
         return Response(serializer.data)
     def post(self, request, pk, format=None):
         request.data['user'] = pk        
+        print(request.data)
         serializer = PromoCodeUserSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -465,11 +466,12 @@ class PromoCodeUserView(APIView):
             except PromoCodeUserModel.DoesNotExist:
                 return Response({"errors":"this promo code isn't valid"})
             try:
-                obj = PromoCodeUserModel.objects.get(promoCode=request.data['promoCode'])
+                obj = PromoCodeUserModel.objects.get(promoCode__pk=request.data['promoCode'])
+                return Response({"errors":"PromoCode is already used"})
             except PromoCodeUserModel.DoesNotExist:
                 serializer.save()
                 return Response({"created":"true","data":serializer.data})
-        return Response({"errors":"PromoCode is already used"})
+        return Response({"errors":serializer.errors})
 
 class CourseSearchView(generics.ListAPIView):
     queryset = CoursesModel.objects.all()
