@@ -466,7 +466,8 @@ class PromoCodeUserView(APIView):
             except PromoCodeUserModel.DoesNotExist:
                 return Response({"errors":"this promo code isn't valid"})
             try:
-                obj = PromoCodeUserModel.objects.get(promoCode__pk=request.data['promoCode'])
+                obj = PromoCodeUserModel.objects.get(promoCode=request.data['promoCode'],user=request.data['user'])
+                print(obj)
                 return Response({"errors":"PromoCode is already used"})
             except PromoCodeUserModel.DoesNotExist:
                 serializer.save()
