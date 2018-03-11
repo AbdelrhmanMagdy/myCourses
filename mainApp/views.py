@@ -413,8 +413,8 @@ class BookaingUserAPI(APIView):
                     promo =  PromoCodeUserModel.objects.get(promoCode__pk=request.data['promoCode'])
                 except PromoCodeUserModel.DoesNotExist:
                     return Response({"errors":"user promo code is invalid"})
-                promo.delete()
                 serializer.save()
+                promo.delete()
             return Response({"booking":"true"})
         return Response({"errors":"you are already registred in this course","s":serializer.errors})
     def get(self, request, pk, format=None):
