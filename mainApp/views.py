@@ -88,7 +88,9 @@ class UserProfileView(APIView):
         except UserProfileModel.DoesNotExist:
             return Response({"errors":"user profile doesn't exist"})
         serializer = UserProfileSerializer(user)
-        return Response(serializer.data)
+        data = serializer.data
+        data['name']=user.user.first_name
+        return Response(data)
     def post(self, request,pk,format=None):
         profileSerializer = UserProfileSerializer(data = request.data)
         request.data['user'] = pk
@@ -397,6 +399,7 @@ class BookaingUserAPI(APIView):
             print(promocode)
             try:
                 code = PromoCodeModel.objects.get(promoCode=promocode)
+                print(code)
                 request.data['promoCode']=code.pk
                 # print(code)
                 users = BookingModel.objects.filter(user__pk=pk)
