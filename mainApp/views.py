@@ -396,7 +396,7 @@ class BookaingUserAPI(APIView):
         if promocode:
             print(promocode)
             try:
-                code = PromoCodeModel.objects.get(pk=promocode)
+                code = PromoCodeModel.objects.get(promoCode=promocode)
                 request.data['promoCode']=code.pk
                 # print(code)
                 users = BookingModel.objects.filter(user__pk=pk)
@@ -408,13 +408,13 @@ class BookaingUserAPI(APIView):
         serializer = BookingSerializer(data=request.data)
         print(serializer.initial_data)
         if serializer.is_valid():
-            serializer.save()
             if promocode:
                 try:
-                    promo =  PromoCodeUserModel.objects.get(promoCode=promocode)
+                    promo =  PromoCodeUserModel.objects.get(promoCode__pk=request.data['promoCode'])
                 except PromoCodeUserModel.DoesNotExist:
                     return Response({"errors":"user promo code is invalid"})
                 promo.delete()
+                serializer.save()
             return Response({"booking":"true"})
         return Response({"errors":"you are already registred in this course","s":serializer.errors})
     def get(self, request, pk, format=None):
