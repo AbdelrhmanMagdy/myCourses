@@ -418,6 +418,8 @@ class BookaingUserAPI(APIView):
                     return Response({"errors":"user promo code is invalid"})
                 serializer.save()
                 promo.delete()
+            else:
+                serializer.save()
             return Response({"booking":"true"})
         return Response({"errors":"you are already registred in this course","s":serializer.errors})
     def get(self, request, pk, format=None):
