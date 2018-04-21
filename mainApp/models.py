@@ -70,7 +70,7 @@ class SubCourseImagesModel(models.Model):
         return str(self.subCourse.instructorName)
 
 class PromoCodeModel(models.Model):
-    promoCode = models.CharField(max_length=50, blank=True,null=True)
+    promoCode = models.CharField(max_length=50, blank=True,null=True,unique=True)
     discount = models.IntegerField()
     def __str__(self):
         return str(self.promoCode)
